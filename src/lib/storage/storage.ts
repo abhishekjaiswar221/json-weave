@@ -53,8 +53,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
 };
 
 const KEYS = {
-  settings: 'parsenest:settings',
-  recents: 'parsenest:recents',
+  settings: 'jsonweave:settings',
+  recents: 'jsonweave:recents',
 };
 
 const MAX_RECENTS = 12;

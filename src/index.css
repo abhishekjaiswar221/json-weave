@@ -163,7 +163,7 @@ body {
   animation: pulse-ring 1.1s ease-out infinite;
 }
 
-/* Precise per-role JSON coloring, computed from ParseNest's own tolerant AST
+/* Precise per-role JSON coloring, computed from JSONWeave's own tolerant AST
    and applied as Monaco decorations (see JsonEditor.tsx). !important because
    these sit alongside Monaco's own token classes on the same span. */
 .jt-key { color: #8be9fd !important; }

@@ -6,7 +6,7 @@ import type { editor } from 'monaco-editor';
  * boolean=amber, null=rose) darkened enough for solid contrast on white —
  * punctuation and line numbers in particular are deliberately darker than a
  * typical "muted" grey, since a light grey on white is what reads as dim.
- * Normal documents get their actual colors from ParseNest's own tolerant AST
+ * Normal documents get their actual colors from JSONWeave's own tolerant AST
  * (see JsonEditor's `collectDecorations`, and the `.editor-dracula.light`
  * overrides in index.css) — the rules below are just the stock-grammar
  * fallback.
@@ -52,4 +52,4 @@ export const lightThemeData: editor.IStandaloneThemeData = {
   },
 };
 
-export const LIGHT_THEME_NAME = 'parsenest-light';
+export const LIGHT_THEME_NAME = 'jsonweave-light';

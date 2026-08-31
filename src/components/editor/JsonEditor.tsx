@@ -129,7 +129,7 @@ export function JsonEditor() {
         endColumn: Math.max(d.end.column, d.start.column + 1),
       }));
 
-    monaco.editor.setModelMarkers(model, 'parsenest', markers);
+    monaco.editor.setModelMarkers(model, 'jsonweave', markers);
   }, [diagnostics, editorReady]);
 
   // key/value decorations from our tolerant AST

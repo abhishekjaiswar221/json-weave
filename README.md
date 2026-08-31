@@ -1,10 +1,10 @@
-# ParseNest
+# JSONWeave
 
 A local-first, developer-grade JSON workspace. Open, format, explore, search,
 inspect and repair JSON without fighting a wall of text — entirely in your
 browser.
 
-**Whoa, this is a JSON tool?** — that's the point. ParseNest isn't another
+**Whoa, this is a JSON tool?** — that's the point. JSONWeave isn't another
 paste-and-format utility; it's a workspace built around the moment a JSON
 document is slightly broken, and the moment after that where you actually
 need to understand what's inside it.

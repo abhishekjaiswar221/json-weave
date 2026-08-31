@@ -12,7 +12,7 @@ export const draculaThemeData: editor.IStandaloneThemeData = {
   rules: [
     // These are the fallback colors used by Monaco's stock JSON grammar (which
     // cannot itself distinguish an object key from a string value). For normal
-    // documents ParseNest overlays precise per-role decorations computed from
+    // documents JSONWeave overlays precise per-role decorations computed from
     // its own tolerant AST — see JsonEditor's `collectDecorations` — so keys,
     // strings, numbers, booleans and null are always colored distinctly there.
     { token: '', foreground: 'F8F8F2', background: '141414' },
@@ -52,4 +52,4 @@ export const draculaThemeData: editor.IStandaloneThemeData = {
   },
 };
 
-export const DRACULA_THEME_NAME = 'parsenest-dracula';
+export const DRACULA_THEME_NAME = 'jsonweave-dracula';

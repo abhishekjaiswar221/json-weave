@@ -143,7 +143,7 @@ export default function Landing() {
         <h2 className="text-[22px] font-semibold text-text">Why this exists</h2>
         <p className="mt-3 text-[13.5px] text-text-muted leading-relaxed">
           API responses, config exports and database dumps rarely arrive clean. Most viewers give up the moment a comma is
-          out of place. ParseNest keeps working — it explains exactly what's wrong, shows you where, and lets you fix it
+          out of place. JSONWeave keeps working — it explains exactly what's wrong, shows you where, and lets you fix it
           without losing your place.
         </p>
       </section>
@@ -209,7 +209,7 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2 text-text-faint">
             <LogoMark size={16} />
-            <span className="text-[12px]">ParseNest</span>
+            <span className="text-[12px]">JSONWeave</span>
           </div>
           <span className="text-[11.5px] text-text-faint">Local-first JSON workspace</span>
         </div>

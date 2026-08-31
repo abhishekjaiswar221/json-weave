@@ -1,8 +1,8 @@
 {
-  "name": "parsenest",
+  "name": "jsonweave",
   "private": true,
   "version": "0.1.0",
-  "description": "ParseNest — a local-first, developer-grade JSON workspace: format, explore, search, inspect and repair JSON entirely in your browser.",
+  "description": "JSONWeave — a local-first, developer-grade JSON workspace: format, explore, search, inspect and repair JSON entirely in your browser.",
   "type": "module",
   "scripts": {
     "dev": "vite",

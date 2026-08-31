@@ -28,7 +28,7 @@ export function TopBar() {
       <div className="flex items-center gap-3 min-w-0">
         <Link to="/" className="shrink-0 flex items-center gap-2">
           <LogoMark size={22} />
-          <span className="hidden sm:inline font-semibold tracking-tight text-[15px] text-text">ParseNest</span>
+          <span className="hidden sm:inline font-semibold tracking-tight text-[15px] text-text">JSONWeave</span>
         </Link>
         <span className="text-border-strong hidden sm:inline">/</span>
         <span className="text-[13px] text-text-muted truncate hidden sm:inline">{docName}</span>
