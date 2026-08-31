@@ -126,14 +126,14 @@ export default function Landing() {
             <span className="ml-2 mono text-[11px] text-text-faint">user-profile.json</span>
           </div>
           <div className="editor-dracula p-5 mono text-[12.5px] leading-relaxed overflow-hidden">
-            <div><span style={{ color: '#F8F8F2' }}>{'{'}</span></div>
-            <div className="pl-4"><span style={{ color: '#8BE9FD' }}>"user"</span><span style={{ color: '#6272A4' }}>: </span><span style={{ color: '#F8F8F2' }}>{'{'}</span></div>
-            <div className="pl-8"><span style={{ color: '#8BE9FD' }}>"name"</span><span style={{ color: '#6272A4' }}>: </span><span style={{ color: '#50FA7B' }}>"Ada Lovelace"</span><span style={{ color: '#6272A4' }}>,</span></div>
-            <div className="pl-8"><span style={{ color: '#8BE9FD' }}>"verified"</span><span style={{ color: '#6272A4' }}>: </span><span style={{ color: '#FFB86C' }}>true</span><span style={{ color: '#6272A4' }}>,</span></div>
-            <div className="pl-8"><span style={{ color: '#8BE9FD' }}>"role"</span><span style={{ color: '#6272A4' }}>: </span><span style={{ color: '#FF79C6' }}>null</span></div>
-            <div className="pl-4"><span style={{ color: '#F8F8F2' }}>{'}'}</span><span style={{ color: '#6272A4' }}>,</span></div>
-            <div className="pl-4"><span style={{ color: '#8BE9FD' }}>"posts"</span><span style={{ color: '#6272A4' }}>: [</span><span style={{ color: '#BD93F9' }}>1</span><span style={{ color: '#6272A4' }}>, </span><span style={{ color: '#BD93F9' }}>2</span><span style={{ color: '#6272A4' }}>, </span><span style={{ color: '#BD93F9' }}>3</span><span style={{ color: '#6272A4' }}>]</span></div>
-            <div><span style={{ color: '#F8F8F2' }}>{'}'}</span></div>
+            <div><span style={{ color: 'var(--dracula-fg)' }}>{'{'}</span></div>
+            <div className="pl-4"><span style={{ color: 'var(--dracula-green)' }}>"user"</span><span style={{ color: 'var(--dracula-comment)' }}>: </span><span style={{ color: 'var(--dracula-fg)' }}>{'{'}</span></div>
+            <div className="pl-8"><span style={{ color: 'var(--dracula-green)' }}>"name"</span><span style={{ color: 'var(--dracula-comment)' }}>: </span><span style={{ color: 'var(--dracula-cyan)' }}>"Ada Lovelace"</span><span style={{ color: 'var(--dracula-comment)' }}>,</span></div>
+            <div className="pl-8"><span style={{ color: 'var(--dracula-green)' }}>"verified"</span><span style={{ color: 'var(--dracula-comment)' }}>: </span><span style={{ color: 'var(--dracula-orange)' }}>true</span><span style={{ color: 'var(--dracula-comment)' }}>,</span></div>
+            <div className="pl-8"><span style={{ color: 'var(--dracula-green)' }}>"role"</span><span style={{ color: 'var(--dracula-comment)' }}>: </span><span style={{ color: 'var(--dracula-pink)' }}>null</span></div>
+            <div className="pl-4"><span style={{ color: 'var(--dracula-fg)' }}>{'}'}</span><span style={{ color: 'var(--dracula-comment)' }}>,</span></div>
+            <div className="pl-4"><span style={{ color: 'var(--dracula-green)' }}>"posts"</span><span style={{ color: 'var(--dracula-comment)' }}>: [</span><span style={{ color: 'var(--dracula-purple)' }}>1</span><span style={{ color: 'var(--dracula-comment)' }}>, </span><span style={{ color: 'var(--dracula-purple)' }}>2</span><span style={{ color: 'var(--dracula-comment)' }}>, </span><span style={{ color: 'var(--dracula-purple)' }}>3</span><span style={{ color: 'var(--dracula-comment)' }}>]</span></div>
+            <div><span style={{ color: 'var(--dracula-fg)' }}>{'}'}</span></div>
           </div>
         </div>
       </section>
