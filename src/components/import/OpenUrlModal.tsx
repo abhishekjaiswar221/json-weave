@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { useUiStore } from '../../store/uiStore';
@@ -13,6 +14,7 @@ export function OpenUrlModal() {
   const closeModal = useUiStore((s) => s.closeModal);
   const pushToast = useUiStore((s) => s.pushToast);
   const loadDocument = useWorkspaceStore((s) => s.loadDocument);
+  const navigate = useNavigate();
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -57,6 +59,7 @@ export function OpenUrlModal() {
       pushToast('success', `Loaded ${name}`);
       closeModal();
       setUrl('');
+      navigate('/workspace');
     } catch (e) {
       if ((e as Error).name === 'AbortError') setError('The request timed out.');
       else setError('Could not fetch that URL — it may not allow cross-origin requests from a browser.');

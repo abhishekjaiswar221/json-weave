@@ -8,7 +8,6 @@ export function StatusBar() {
   const source = useWorkspaceStore((s) => s.source);
   const value = useWorkspaceStore((s) => s.value);
   const diagnostics = useWorkspaceStore((s) => s.diagnostics);
-  const strictlyValid = useWorkspaceStore((s) => s.strictlyValid);
   const isParsing = useWorkspaceStore((s) => s.isParsing);
   const diagnosticsOpen = useUiStore((s) => s.diagnosticsOpen);
   const setDiagnosticsOpen = useUiStore((s) => s.setDiagnosticsOpen);

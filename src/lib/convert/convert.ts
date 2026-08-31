@@ -1,8 +1,8 @@
-import yaml from 'js-yaml';
+import { dump } from 'js-yaml';
 import type { JsonValue } from '../parser/types';
 
 export function jsonToYaml(value: JsonValue): string {
-  return yaml.dump(value, { indent: 2, lineWidth: 100, noRefs: true });
+  return dump(value, { indent: 2, lineWidth: 100, noRefs: true });
 }
 
 function isArrayOfFlatObjects(value: JsonValue): value is Record<string, JsonValue>[] {

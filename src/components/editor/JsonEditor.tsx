@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Editor, { type OnMount } from '@monaco-editor/react';
 import type * as Monaco from 'monaco-editor';
 import { useWorkspaceStore } from '../../store/workspaceStore';
@@ -65,6 +65,7 @@ export function JsonEditor() {
   const jumpToOffset = useWorkspaceStore((s) => s.jumpToOffset);
   const clearJump = useWorkspaceStore((s) => s.clearJump);
   const editorSettings = useUiStore((s) => s.settings.editor);
+  const [editorReady, setEditorReady] = useState(false);
 
   const handleMount: OnMount = useCallback((editor, monaco) => {
     editorRef.current = editor;
@@ -83,6 +84,11 @@ export function JsonEditor() {
       const path = findPathAtOffset(currentAst, offset);
       if (path) selectPath(path);
     });
+
+    // The editor mounts asynchronously (Monaco loads as its own chunk), which
+    // can land after the document's first parse already happened — trigger a
+    // render pass now so markers/decorations from that first parse apply.
+    setEditorReady(true);
   }, [selectPath]);
 
   // markers
@@ -111,7 +117,7 @@ export function JsonEditor() {
       }));
 
     monaco.editor.setModelMarkers(model, 'parsenest', markers);
-  }, [diagnostics]);
+  }, [diagnostics, editorReady]);
 
   // key/value decorations from our tolerant AST
   useEffect(() => {
@@ -122,7 +128,7 @@ export function JsonEditor() {
     if (!model) return;
     const decorations = collectDecorations(monaco, model, ast);
     decorationIds.current = editor.deltaDecorations(decorationIds.current, decorations);
-  }, [ast, source]);
+  }, [ast, source, editorReady]);
 
   // jump to offset requests (from diagnostics panel / search)
   useEffect(() => {
