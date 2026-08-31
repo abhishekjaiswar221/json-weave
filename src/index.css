@@ -4,22 +4,23 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
 
-  /* SaaS UI palette — neutral, cool dark base with a single violet accent.
-     This is deliberately NOT the Dracula palette; the editor owns Dracula. */
-  --color-canvas: #0b0c10;
-  --color-surface: #101117;
-  --color-surface-2: #14151d;
-  --color-surface-3: #191a23;
-  --color-border: #22232e;
-  --color-border-strong: #2c2d3a;
+  /* SaaS UI palette — a neutral warm-grey dark base (Notion-style, no blue
+     tint) with a single vivid green accent (Neon-style). The editor's syntax
+     colors are derived from this same palette — see draculaTheme.ts. */
+  --color-canvas: #141414;
+  --color-surface: #1b1b1b;
+  --color-surface-2: #212121;
+  --color-surface-3: #282828;
+  --color-border: #333333;
+  --color-border-strong: #3f3f3f;
 
-  --color-text: #f4f5f7;
-  --color-text-muted: #9a9db0;
-  --color-text-faint: #63667a;
+  --color-text: #ededec;
+  --color-text-muted: #9a9a98;
+  --color-text-faint: #6e6e6c;
 
-  --color-accent: #8b7cf6;
-  --color-accent-hover: #9d8ffb;
-  --color-accent-muted: #8b7cf61a;
+  --color-accent: #00e6a0;
+  --color-accent-hover: #33eeb3;
+  --color-accent-muted: #00e6a01a;
 
   --color-success: #4fd68c;
   --color-warning: #f0b64c;
@@ -124,32 +125,36 @@ body {
   font-feature-settings: "liga" 1, "calt" 1;
 }
 
-/* Dracula-inspired editor surface tokens — scoped, never applied to app chrome.
+/* Editor surface tokens — scoped, never applied to app chrome. Colors are
+   derived from the app's own palette (see the @theme block above) rather
+   than a borrowed theme, so the editor reads as part of the same product:
+   dark mode leans on the app's accent green plus a few soft, low-saturation
+   companion hues (easy on the eyes over a near-black background — no neon).
    Swaps to a light variant (see JsonEditor.tsx / lightTheme.ts) when the app
    theme resolves to light, via the .light modifier applied on this element. */
 .editor-dracula {
-  --dracula-bg: #121212;
-  --dracula-fg: #f8f8f2;
-  --dracula-comment: #6272a4;
-  --dracula-cyan: #8be9fd;
-  --dracula-green: #50fa7b;
-  --dracula-orange: #ffb86c;
-  --dracula-pink: #ff79c6;
-  --dracula-purple: #bd93f9;
-  --dracula-yellow: #f1fa8c;
+  --dracula-bg: #141414;
+  --dracula-fg: #ededec;
+  --dracula-comment: #6e6e6c;
+  --dracula-cyan: #7ec8ee;
+  --dracula-green: #7fe0b4;
+  --dracula-orange: #e8b368;
+  --dracula-pink: #eea8ce;
+  --dracula-purple: #b6a6f0;
+  --dracula-yellow: #e8d268;
   background: var(--dracula-bg);
 }
 
 .editor-dracula.light {
   --dracula-bg: #ffffff;
   --dracula-fg: #24252b;
-  --dracula-comment: #8b8d9b;
-  --dracula-cyan: #0e7490;
-  --dracula-green: #15803d;
-  --dracula-orange: #b45309;
-  --dracula-pink: #be185d;
-  --dracula-purple: #7c3aed;
-  --dracula-yellow: #a16207;
+  --dracula-comment: #475569;
+  --dracula-cyan: #0369a1;
+  --dracula-green: #047857;
+  --dracula-orange: #92400e;
+  --dracula-pink: #be123c;
+  --dracula-purple: #6d28d9;
+  --dracula-yellow: #854d0e;
 }
 
 @keyframes pulse-ring {
@@ -163,14 +168,14 @@ body {
 /* Precise per-role JSON coloring, computed from ParseNest's own tolerant AST
    and applied as Monaco decorations (see JsonEditor.tsx). !important because
    these sit alongside Monaco's own token classes on the same span. */
-.jt-key { color: #8be9fd !important; }
-.jt-string { color: #50fa7b !important; }
-.jt-number { color: #bd93f9 !important; }
-.jt-boolean { color: #ffb86c !important; }
-.jt-null { color: #ff79c6 !important; }
+.jt-key { color: #7fe0b4 !important; }
+.jt-string { color: #7ec8ee !important; }
+.jt-number { color: #b6a6f0 !important; }
+.jt-boolean { color: #e8b368 !important; }
+.jt-null { color: #eea8ce !important; }
 
-.editor-dracula.light .jt-key { color: #0e7490 !important; }
-.editor-dracula.light .jt-string { color: #15803d !important; }
-.editor-dracula.light .jt-number { color: #7c3aed !important; }
-.editor-dracula.light .jt-boolean { color: #b45309 !important; }
-.editor-dracula.light .jt-null { color: #be185d !important; }
+.editor-dracula.light .jt-key { color: #047857 !important; }
+.editor-dracula.light .jt-string { color: #0369a1 !important; }
+.editor-dracula.light .jt-number { color: #6d28d9 !important; }
+.editor-dracula.light .jt-boolean { color: #92400e !important; }
+.editor-dracula.light .jt-null { color: #be123c !important; }
