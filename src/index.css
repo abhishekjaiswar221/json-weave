@@ -124,9 +124,11 @@ body {
   font-feature-settings: "liga" 1, "calt" 1;
 }
 
-/* Dracula-inspired editor surface tokens — scoped, never applied to app chrome */
+/* Dracula-inspired editor surface tokens — scoped, never applied to app chrome.
+   Swaps to a light variant (see JsonEditor.tsx / lightTheme.ts) when the app
+   theme resolves to light, via the .light modifier applied on this element. */
 .editor-dracula {
-  --dracula-bg: #282a36;
+  --dracula-bg: #121212;
   --dracula-fg: #f8f8f2;
   --dracula-comment: #6272a4;
   --dracula-cyan: #8be9fd;
@@ -136,6 +138,18 @@ body {
   --dracula-purple: #bd93f9;
   --dracula-yellow: #f1fa8c;
   background: var(--dracula-bg);
+}
+
+.editor-dracula.light {
+  --dracula-bg: #ffffff;
+  --dracula-fg: #24252b;
+  --dracula-comment: #8b8d9b;
+  --dracula-cyan: #0e7490;
+  --dracula-green: #15803d;
+  --dracula-orange: #b45309;
+  --dracula-pink: #be185d;
+  --dracula-purple: #7c3aed;
+  --dracula-yellow: #a16207;
 }
 
 @keyframes pulse-ring {
@@ -154,3 +168,9 @@ body {
 .jt-number { color: #bd93f9 !important; }
 .jt-boolean { color: #ffb86c !important; }
 .jt-null { color: #ff79c6 !important; }
+
+.editor-dracula.light .jt-key { color: #0e7490 !important; }
+.editor-dracula.light .jt-string { color: #15803d !important; }
+.editor-dracula.light .jt-number { color: #7c3aed !important; }
+.editor-dracula.light .jt-boolean { color: #b45309 !important; }
+.editor-dracula.light .jt-null { color: #be185d !important; }

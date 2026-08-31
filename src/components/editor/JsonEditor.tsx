@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import clsx from 'clsx';
 import Editor, { type OnMount } from '@monaco-editor/react';
 import type * as Monaco from 'monaco-editor';
 import { useWorkspaceStore } from '../../store/workspaceStore';
 import { useUiStore } from '../../store/uiStore';
+import { useResolvedTheme } from '../../hooks/useThemeSync';
 import { findPathAtOffset } from '../../lib/parser/tolerantParser';
 import { draculaThemeData, DRACULA_THEME_NAME } from './draculaTheme';
+import { lightThemeData, LIGHT_THEME_NAME } from './lightTheme';
 import type { AstNode, ObjectProperty } from '../../lib/parser/types';
 
 function collectDecorations(monaco: typeof Monaco, model: Monaco.editor.ITextModel, ast: AstNode | undefined) {
@@ -65,6 +68,8 @@ export function JsonEditor() {
   const jumpToOffset = useWorkspaceStore((s) => s.jumpToOffset);
   const clearJump = useWorkspaceStore((s) => s.clearJump);
   const editorSettings = useUiStore((s) => s.settings.editor);
+  const resolvedTheme = useResolvedTheme();
+  const monacoThemeName = resolvedTheme === 'light' ? LIGHT_THEME_NAME : DRACULA_THEME_NAME;
   const [editorReady, setEditorReady] = useState(false);
 
   const handleMount: OnMount = useCallback((editor, monaco) => {
@@ -72,9 +77,10 @@ export function JsonEditor() {
     monacoRef.current = monaco;
     if (!themeRegistered) {
       monaco.editor.defineTheme(DRACULA_THEME_NAME, draculaThemeData);
+      monaco.editor.defineTheme(LIGHT_THEME_NAME, lightThemeData);
       themeRegistered = true;
     }
-    monaco.editor.setTheme(DRACULA_THEME_NAME);
+    // initial theme applied by the effect below, once editorReady flips true
 
     editor.onDidChangeCursorPosition((e) => {
       const model = editor.getModel();
@@ -90,6 +96,13 @@ export function JsonEditor() {
     // render pass now so markers/decorations from that first parse apply.
     setEditorReady(true);
   }, [selectPath]);
+
+  // follow the app theme once the editor is mounted (both themes are already
+  // registered by then — see handleMount)
+  useEffect(() => {
+    if (!editorReady) return;
+    monacoRef.current?.editor.setTheme(monacoThemeName);
+  }, [monacoThemeName, editorReady]);
 
   // markers
   useEffect(() => {
@@ -160,14 +173,14 @@ export function JsonEditor() {
   }, [editorSettings]);
 
   return (
-    <div className="editor-dracula h-full w-full">
+    <div className={clsx('editor-dracula h-full w-full', resolvedTheme === 'light' && 'light')}>
       <Editor
         height="100%"
         defaultLanguage="json"
         value={source}
         onMount={handleMount}
         onChange={(value) => setSource(value ?? '')}
-        theme={DRACULA_THEME_NAME}
+        theme={monacoThemeName}
         options={{
           fontFamily: "'JetBrains Mono', ui-monospace, monospace",
           fontSize: editorSettings.fontSize,
