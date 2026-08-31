@@ -1,7 +1,8 @@
 {
-  "name": "json-viewer-with-partial-json-handling",
+  "name": "parsenest",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "ParseNest — a local-first, developer-grade JSON workspace: format, explore, search, inspect and repair JSON entirely in your browser.",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -27,9 +28,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.1.0",
-    "autoprefixer": "^10.5.4",
     "oxlint": "^1.79.0",
-    "postcss": "^8.5.26",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.2",
     "vite": "^8.2.2"

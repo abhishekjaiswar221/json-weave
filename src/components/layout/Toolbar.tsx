@@ -5,6 +5,7 @@ import { useUiStore } from '../../store/uiStore';
 import { formatJson, minifyJson } from '../../lib/formatter/format';
 import { buildRepairPreview } from '../../lib/repair/repair';
 import { Button } from '../common/Button';
+import { modKey } from '../../lib/platform';
 
 const VIEW_TABS: { id: ViewMode; label: string }[] = [
   { id: 'code', label: 'Code' },
@@ -29,12 +30,13 @@ export function Toolbar() {
   const disabled = value === undefined;
 
   return (
-    <div className="h-11 shrink-0 border-b border-border bg-surface px-2.5 flex items-center justify-between gap-3">
-      <div className="flex items-center gap-1">
+    <div className="h-11 shrink-0 border-b border-border bg-surface px-2.5 flex items-center justify-between gap-3 overflow-x-auto">
+      <div className="flex items-center gap-1 shrink-0">
         <Button
           size="sm"
           variant="ghost"
           disabled={disabled}
+          title={`Format JSON (${modKey}+Shift+F)`}
           onClick={() => {
             if (value === undefined) return;
             setSource(formatJson(value, settings.formatting));
@@ -47,6 +49,7 @@ export function Toolbar() {
           size="sm"
           variant="ghost"
           disabled={disabled}
+          title={`Minify JSON (${modKey}+Shift+M)`}
           onClick={() => {
             if (value === undefined) return;
             setSource(minifyJson(value, { sortKeys: settings.formatting.sortKeys }));
@@ -59,6 +62,7 @@ export function Toolbar() {
           size="sm"
           variant="ghost"
           disabled={disabled}
+          title="Sort keys alphabetically"
           onClick={() => {
             if (value === undefined) return;
             setSource(formatJson(value, { ...settings.formatting, sortKeys: true }));
@@ -70,6 +74,7 @@ export function Toolbar() {
         <Button
           size="sm"
           variant="ghost"
+          title="Validate JSON"
           onClick={() => {
             const preview = buildRepairPreview(source, settings.formatting.indent);
             if (preview.clean) pushToast('success', 'JSON is valid');
@@ -78,21 +83,21 @@ export function Toolbar() {
         >
           <CheckCircle2 size={13} /> Validate
         </Button>
-        <Button size="sm" variant="ghost" onClick={() => openModal('repair')}>
+        <Button size="sm" variant="ghost" title="Repair JSON" onClick={() => openModal('repair')}>
           <Wrench size={13} /> Repair
         </Button>
-        <Button size="sm" variant="ghost" onClick={() => setSearchOpen(true)}>
+        <Button size="sm" variant="ghost" title={`Search JSON (${modKey}+F)`} onClick={() => setSearchOpen(true)}>
           <SearchIcon size={13} /> Search
         </Button>
       </div>
 
-      <div className="flex items-center gap-0.5 rounded-md border border-border bg-surface-2 p-0.5">
+      <div className="flex items-center gap-0.5 rounded-md border border-border bg-surface-2 p-0.5 shrink-0">
         {VIEW_TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setViewMode(t.id)}
             className={clsx(
-              'px-2.5 h-6 rounded text-[12px] font-medium transition-colors',
+              'px-2.5 h-6 rounded text-[12px] font-medium transition-colors whitespace-nowrap',
               viewMode === t.id ? 'bg-surface text-text shadow-sm' : 'text-text-faint hover:text-text-muted'
             )}
           >

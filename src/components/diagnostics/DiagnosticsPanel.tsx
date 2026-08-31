@@ -21,7 +21,7 @@ export function DiagnosticsPanel() {
   const actionable = diagnostics.filter((d) => d.severity !== 'info');
 
   return (
-    <div className="absolute bottom-9 right-3 z-40 w-[380px] max-h-[60vh] flex flex-col rounded-lg border border-border bg-surface shadow-2xl animate-slide-up">
+    <div className="absolute bottom-9 right-3 z-40 w-95 max-h-[60vh] flex flex-col rounded-lg border border-border bg-surface shadow-2xl animate-slide-up">
       <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-border">
         <span className="text-[12.5px] font-medium text-text">
           {actionable.length === 0 ? 'No issues detected' : `${actionable.length} issue${actionable.length === 1 ? '' : 's'} detected`}

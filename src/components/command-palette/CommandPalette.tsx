@@ -18,15 +18,26 @@ export function CommandPalette() {
     return commands.filter((c) => (c.label + ' ' + c.group + ' ' + (c.keywords ?? '')).toLowerCase().includes(q));
   }, [commands, query]);
 
-  useEffect(() => {
+  // Reset query/selection when the palette transitions closed -> open, and
+  // reset the selection whenever the query changes — both derived during
+  // render rather than in an effect (React coalesces this into one commit).
+  const [wasOpen, setWasOpen] = useState(open);
+  if (open !== wasOpen) {
+    setWasOpen(open);
     if (open) {
       setQuery('');
       setActiveIndex(0);
-      setTimeout(() => inputRef.current?.focus(), 30);
     }
-  }, [open]);
+  }
+  const [lastQuery, setLastQuery] = useState(query);
+  if (query !== lastQuery) {
+    setLastQuery(query);
+    setActiveIndex(0);
+  }
 
-  useEffect(() => setActiveIndex(0), [query]);
+  useEffect(() => {
+    if (open) setTimeout(() => inputRef.current?.focus(), 30);
+  }, [open]);
 
   if (!open) return null;
 

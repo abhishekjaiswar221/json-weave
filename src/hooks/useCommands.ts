@@ -5,7 +5,7 @@ import { formatJson, minifyJson } from '../lib/formatter/format';
 import { buildRepairPreview } from '../lib/repair/repair';
 import { downloadText } from '../lib/download';
 import { formatPath } from '../lib/json-path/path';
-import { modKey } from '../components/common/Kbd';
+import { modKey } from '../lib/platform';
 
 export interface Command {
   id: string;

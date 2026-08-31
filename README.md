@@ -1,32 +1,59 @@
-# React + TypeScript + Vite
+# ParseNest
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A local-first, developer-grade JSON workspace. Open, format, explore, search,
+inspect and repair JSON without fighting a wall of text — entirely in your
+browser.
 
-Currently, two official plugins are available:
+**Whoa, this is a JSON tool?** — that's the point. ParseNest isn't another
+paste-and-format utility; it's a workspace built around the moment a JSON
+document is slightly broken, and the moment after that where you actually
+need to understand what's inside it.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## What makes it different
 
-## React Compiler
+- **Partial JSON understanding.** A custom recursive-descent tolerant parser
+  (`src/lib/parser`) never gives up on malformed input — it recovers a
+  best-effort document and explains *what* looks wrong, in plain language:
+  "Possible trailing comma after `"age": 25`", "Key `name` is not quoted.",
+  "String appears to be missing a closing quote."
+- **Repair, not silent mutation.** Repair mode lists every issue found and
+  lets you preview the fixed document before anything in the editor changes.
+- **Inspector-first workflow.** Select any value — in the editor or the tree
+  — to see its type, JSON path, length, and smart previews (URLs, emails,
+  ISO dates, hex colors, and JWTs decoded entirely client-side).
+  Code → Tree → Overview → Table → Diff — five ways to look at the same
+  document, switchable instantly.
+- **Privacy by architecture.** Parsing, formatting, searching and repair all
+  run in your browser. Nothing is uploaded unless you explicitly use "Open
+  from URL", which fetches directly from your browser to that address.
+- **Keyboard-first.** `Cmd/Ctrl+K` command palette, plus the shortcuts you'd
+  expect for format, minify, search, save and open.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Stack
 
-## Expanding the Oxlint configuration
+React + TypeScript + Tailwind CSS v4 + Monaco Editor (self-hosted, JSON-only
+build — not the CDN default) + Zustand + Vite. See `src/lib/` for the
+framework-agnostic core (parser, formatter, repair, search, JSON path, diff,
+conversion) and `src/components/` for the UI built on top of it.
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## Getting started
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev      # start the dev server
+npm run build    # type-check + production build
+npm run preview  # preview the production build locally
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Project layout
+
+```text
+src/
+  components/    editor, tree, inspector, toolbar, command-palette,
+                 diagnostics, landing, import, export, settings, table, diff
+  lib/           parser, formatter, validator/repair, search, json-path,
+                 diff, storage, convert — all UI-independent
+  store/         zustand stores (workspace document state, UI/settings state)
+  pages/         Landing, Workspace
+  workers/       off-main-thread parsing for large documents
+```
