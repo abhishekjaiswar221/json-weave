@@ -1,0 +1,18 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0B0C10"/>
+  <rect width="1200" height="630" fill="url(#grid)" opacity="0.5"/>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#1A1C25" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <g transform="translate(120,190)">
+    <rect width="120" height="120" rx="28" fill="#12131A" stroke="#23252F" stroke-width="1.5"/>
+    <path d="M38 30H30a8 8 0 0 0-8 8v8" stroke="#8B7CF6" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M82 90h8a8 8 0 0 0 8-8v-8" stroke="#8B7CF6" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="60" cy="60" r="11" fill="#8BE9FD"/>
+  </g>
+  <text x="280" y="270" fill="#F4F5F7" font-family="Arial, sans-serif" font-size="64" font-weight="700">ParseNest</text>
+  <text x="120" y="380" fill="#F4F5F7" font-family="Arial, sans-serif" font-size="46" font-weight="600">Understand your JSON. Instantly.</text>
+  <text x="120" y="430" fill="#8A8D9C" font-family="Arial, sans-serif" font-size="24">Format, inspect, search and repair JSON — entirely in your browser.</text>
+</svg>
