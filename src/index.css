@@ -18,9 +18,12 @@
   --color-text-muted: #9a9a98;
   --color-text-faint: #6e6e6c;
 
-  --color-accent: #00e6a0;
-  --color-accent-hover: #33eeb3;
-  --color-accent-muted: #00e6a01a;
+  --color-accent: #5fbe93;
+  --color-accent-hover: #74c9a2;
+  --color-accent-muted: #5fbe931a;
+  /* Ink color for text/icons sitting on a solid accent background — the
+     accent itself is too light/mid-toned for white text to clear 4.5:1. */
+  --color-accent-ink: #0b0c0c;
 
   --color-success: #4fd68c;
   --color-warning: #f0b64c;
@@ -50,7 +53,9 @@
 }
 
 /* Light theme — secondary to the dark-first flagship experience, still a
-   refined neutral SaaS palette (the editor stays Dracula in both modes). */
+   refined neutral SaaS palette. Same accent as dark mode (a shade darker on
+   hover, rather than lighter, since it's sitting on white here); the editor
+   gets its own light theme tuned separately — see lightTheme.ts. */
 :root[data-theme='light'] {
   color-scheme: light;
   --color-canvas: #fafafa;
@@ -62,9 +67,9 @@
   --color-text: #18181b;
   --color-text-muted: #6b6d7a;
   --color-text-faint: #9a9ba8;
-  --color-accent: #7c6ff0;
-  --color-accent-hover: #6c5ce8;
-  --color-accent-muted: #7c6ff01a;
+  --color-accent: #5fbe93;
+  --color-accent-hover: #4aa378;
+  --color-accent-muted: #5fbe931a;
 }
 
 @media (prefers-color-scheme: light) {
@@ -79,9 +84,9 @@
     --color-text: #18181b;
     --color-text-muted: #6b6d7a;
     --color-text-faint: #9a9ba8;
-    --color-accent: #7c6ff0;
-    --color-accent-hover: #6c5ce8;
-    --color-accent-muted: #7c6ff01a;
+    --color-accent: #5fbe93;
+    --color-accent-hover: #4aa378;
+    --color-accent-muted: #5fbe931a;
   }
 }
 

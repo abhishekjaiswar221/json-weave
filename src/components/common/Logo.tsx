@@ -8,7 +8,7 @@ interface LogoProps {
 export function LogoMark({ size = 24 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect width="32" height="32" rx="8" fill="#00E6A0" />
+      <rect width="32" height="32" rx="8" fill="#5FBE93" />
       <text
         x="16"
         y="22"

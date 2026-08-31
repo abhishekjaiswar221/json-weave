@@ -115,7 +115,7 @@ export default function Workspace() {
             {isPanelView && (
               <button
                 onClick={() => setMobileInspectorOpen(true)}
-                className="md:hidden fixed bottom-16 right-4 z-30 flex items-center gap-1.5 rounded-full bg-accent text-white px-4 py-2.5 shadow-lg text-[12.5px] font-medium"
+                className="md:hidden fixed bottom-16 right-4 z-30 flex items-center gap-1.5 rounded-full bg-accent text-accent-ink px-4 py-2.5 shadow-lg text-[12.5px] font-medium"
               >
                 <PanelRight size={14} />
                 {viewMode === 'tree' ? 'Tree' : viewMode === 'overview' ? 'Overview' : 'Inspector'}

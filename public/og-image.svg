@@ -7,7 +7,7 @@
     </pattern>
   </defs>
   <g transform="translate(120,190)">
-    <rect width="120" height="120" rx="28" fill="#00E6A0"/>
+    <rect width="120" height="120" rx="28" fill="#5FBE93"/>
     <text x="60" y="82" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="64" font-weight="700" fill="#0B0C0C">{}</text>
   </g>
   <text x="280" y="270" fill="#EDEDEC" font-family="Arial, sans-serif" font-size="64" font-weight="700">JSONWeave</text>
