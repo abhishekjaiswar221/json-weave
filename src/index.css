@@ -125,23 +125,21 @@ body {
   font-feature-settings: "liga" 1, "calt" 1;
 }
 
-/* Editor surface tokens — scoped, never applied to app chrome. Colors are
-   derived from the app's own palette (see the @theme block above) rather
-   than a borrowed theme, so the editor reads as part of the same product:
-   dark mode leans on the app's accent green plus a few soft, low-saturation
-   companion hues (easy on the eyes over a near-black background — no neon).
-   Swaps to a light variant (see JsonEditor.tsx / lightTheme.ts) when the app
-   theme resolves to light, via the .light modifier applied on this element. */
+/* Editor surface tokens — scoped, never applied to app chrome. The background
+   is the app's own dark canvas token, but the text itself uses the classic
+   Dracula palette (cyan/green/purple/orange/pink). Swaps to a light variant
+   (see JsonEditor.tsx / lightTheme.ts) when the app theme resolves to light,
+   via the .light modifier applied on this element. */
 .editor-dracula {
   --dracula-bg: #141414;
-  --dracula-fg: #ededec;
-  --dracula-comment: #6e6e6c;
-  --dracula-cyan: #7ec8ee;
-  --dracula-green: #7fe0b4;
-  --dracula-orange: #e8b368;
-  --dracula-pink: #eea8ce;
-  --dracula-purple: #b6a6f0;
-  --dracula-yellow: #e8d268;
+  --dracula-fg: #f8f8f2;
+  --dracula-comment: #6272a4;
+  --dracula-cyan: #8be9fd;
+  --dracula-green: #50fa7b;
+  --dracula-orange: #ffb86c;
+  --dracula-pink: #ff79c6;
+  --dracula-purple: #bd93f9;
+  --dracula-yellow: #f1fa8c;
   background: var(--dracula-bg);
 }
 
@@ -168,11 +166,11 @@ body {
 /* Precise per-role JSON coloring, computed from ParseNest's own tolerant AST
    and applied as Monaco decorations (see JsonEditor.tsx). !important because
    these sit alongside Monaco's own token classes on the same span. */
-.jt-key { color: #7fe0b4 !important; }
-.jt-string { color: #7ec8ee !important; }
-.jt-number { color: #b6a6f0 !important; }
-.jt-boolean { color: #e8b368 !important; }
-.jt-null { color: #eea8ce !important; }
+.jt-key { color: #8be9fd !important; }
+.jt-string { color: #50fa7b !important; }
+.jt-number { color: #bd93f9 !important; }
+.jt-boolean { color: #ffb86c !important; }
+.jt-null { color: #ff79c6 !important; }
 
 .editor-dracula.light .jt-key { color: #047857 !important; }
 .editor-dracula.light .jt-string { color: #0369a1 !important; }

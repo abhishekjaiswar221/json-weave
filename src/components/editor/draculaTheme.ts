@@ -1,12 +1,10 @@
 import type { editor } from 'monaco-editor';
 
 /**
- * Dark editor theme, derived from the app's own dark palette (see the
- * @theme block in index.css) rather than a borrowed theme — the editor's
- * background/foreground match the app chrome exactly, and the per-role
- * token colors are soft, low-saturation companions to the app's accent
- * green (muted on purpose: full-saturation neon over a near-black
- * background is what reads as glare on long documents full of strings).
+ * Dark editor theme. The background/gutter/selection/cursor are the app's
+ * own dark tokens (see the @theme block in index.css), but the actual JSON
+ * text uses the classic Dracula palette — keys cyan, strings green, numbers
+ * purple, booleans orange, null pink — rather than a custom derived scheme.
  */
 export const draculaThemeData: editor.IStandaloneThemeData = {
   base: 'vs-dark',
@@ -17,22 +15,22 @@ export const draculaThemeData: editor.IStandaloneThemeData = {
     // documents ParseNest overlays precise per-role decorations computed from
     // its own tolerant AST — see JsonEditor's `collectDecorations` — so keys,
     // strings, numbers, booleans and null are always colored distinctly there.
-    { token: '', foreground: 'EDEDEC', background: '141414' },
-    { token: 'string.json', foreground: '7EC8EE' }, // soft blue — string fallback
-    { token: 'number.json', foreground: 'B6A6F0' }, // soft violet — numbers
-    { token: 'number.float.json', foreground: 'B6A6F0' },
-    { token: 'keyword.json', foreground: 'E8B368' }, // soft amber — true/false/null fallback
-    { token: 'delimiter.bracket.json', foreground: 'EDEDEC' },
-    { token: 'delimiter.array.json', foreground: 'EDEDEC' },
-    { token: 'delimiter.colon.json', foreground: '6E6E6C' },
-    { token: 'delimiter.comma.json', foreground: '6E6E6C' },
-    { token: 'comment', foreground: '6E6E6C', fontStyle: 'italic' },
+    { token: '', foreground: 'F8F8F2', background: '141414' },
+    { token: 'string.json', foreground: '50FA7B' }, // green — string fallback
+    { token: 'number.json', foreground: 'BD93F9' }, // purple — numbers
+    { token: 'number.float.json', foreground: 'BD93F9' },
+    { token: 'keyword.json', foreground: 'FFB86C' }, // orange — true/false/null fallback
+    { token: 'delimiter.bracket.json', foreground: 'F8F8F2' },
+    { token: 'delimiter.array.json', foreground: 'F8F8F2' },
+    { token: 'delimiter.colon.json', foreground: '6272A4' },
+    { token: 'delimiter.comma.json', foreground: '6272A4' },
+    { token: 'comment', foreground: '6272A4', fontStyle: 'italic' },
   ],
   colors: {
     'editor.background': '#141414',
-    'editor.foreground': '#EDEDEC',
-    'editorLineNumber.foreground': '#6E6E6C',
-    'editorLineNumber.activeForeground': '#EDEDEC',
+    'editor.foreground': '#F8F8F2',
+    'editorLineNumber.foreground': '#6272A4',
+    'editorLineNumber.activeForeground': '#F8F8F2',
     'editor.selectionBackground': '#123B2E',
     'editor.inactiveSelectionBackground': '#123B2E80',
     'editor.lineHighlightBackground': '#1E1E1E',
