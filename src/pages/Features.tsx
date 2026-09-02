@@ -10,7 +10,9 @@ import { Button } from '../components/common/Button';
 import { useWorkspaceStore } from '../store/workspaceStore';
 import { useUiStore } from '../store/uiStore';
 import { useDragAndDrop } from '../hooks/useDragAndDrop';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { EXAMPLES } from '../lib/examples';
+import { modKey } from '../lib/platform';
 import { OpenUrlModal } from '../components/import/OpenUrlModal';
 import { ToastContainer } from '../components/common/ToastContainer';
 
@@ -25,7 +27,27 @@ const FEATURES = [
 
 const WORKFLOW = ['Paste', 'Understand', 'Fix', 'Inspect', 'Export'];
 
-export default function Landing() {
+const SHORTCUTS = [
+  { label: 'Command palette', keys: `${modKey}K` },
+  { label: 'Format JSON', keys: `${modKey}⇧F` },
+  { label: 'Minify JSON', keys: `${modKey}⇧M` },
+  { label: 'Search JSON', keys: `${modKey}F` },
+  { label: 'Open file', keys: `${modKey}O` },
+  { label: 'Download JSON', keys: `${modKey}S` },
+];
+
+/**
+ * The informational/marketing route — what JSONWeave is, its features, and
+ * how to drive it entirely from the keyboard. The tool itself lives at "/"
+ * (see Workspace.tsx); this page never gates access to it, it's reachable
+ * from the workspace's top bar for anyone who wants the fuller pitch.
+ */
+export default function Features() {
+  useDocumentMeta(
+    'JSONWeave — Features & shortcuts',
+    'What JSONWeave does, how its keyboard-first workflow works, and why local-first JSON tooling matters.'
+  );
+
   const navigate = useNavigate();
   const loadDocument = useWorkspaceStore((s) => s.loadDocument);
   const openModal = useUiStore((s) => s.openModal);
@@ -34,7 +56,7 @@ export default function Landing() {
 
   const open = (name: string, content: string) => {
     loadDocument(name, content);
-    navigate('/workspace');
+    navigate('/');
   };
 
   const { isDragging, handlers } = useDragAndDrop((file) => {
@@ -73,8 +95,8 @@ export default function Landing() {
         <Logo size={24} />
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" onClick={() => openModal('openUrl')}>Open from URL</Button>
-          <Button variant="primary" size="sm" onClick={() => navigate('/workspace')}>
-            Open Workspace <ArrowRight size={12} />
+          <Button variant="primary" size="sm" onClick={() => navigate('/')}>
+            Open the workspace <ArrowRight size={12} />
           </Button>
         </div>
       </header>
@@ -88,7 +110,7 @@ export default function Landing() {
           Understand your JSON.<br />Instantly.
         </h1>
         <p className="mt-4 text-[15px] text-text-muted max-w-lg mx-auto leading-relaxed">
-          Open, format, inspect, search and repair JSON without fighting a wall of text.
+          A local-first, keyboard-driven JSON workspace: format, explore, search, inspect and repair, entirely in your browser.
         </p>
 
         <div className="mt-8 flex items-center justify-center gap-2.5 flex-wrap">
@@ -174,6 +196,25 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* keyboard shortcuts */}
+      <section className="max-w-3xl mx-auto px-6 pb-20">
+        <h2 className="text-center text-[13px] font-medium text-text-faint uppercase tracking-widest mb-6">
+          Keyboard-first
+        </h2>
+        <div className="rounded-xl border border-border overflow-hidden">
+          {SHORTCUTS.map((s) => (
+            <div key={s.label} className="flex items-center justify-between px-4 py-2.5 border-b border-border last:border-b-0 bg-surface">
+              <span className="text-[12.5px] text-text">{s.label}</span>
+              <kbd className="mono text-[11px] px-1.5 py-0.5 rounded border border-border-strong bg-surface-3 text-text-muted">{s.keys}</kbd>
+            </div>
+          ))}
+        </div>
+        <p className="mt-3 text-center text-[11.5px] text-text-faint">
+          The full list — including view switching, tree navigation and export — is one keystroke away: open the command
+          palette and every action shows its shortcut alongside it.
+        </p>
+      </section>
+
       {/* privacy */}
       <section className="max-w-3xl mx-auto px-6 pb-20 text-center">
         <div className="rounded-xl border border-border bg-surface-2 px-8 py-10">
@@ -191,7 +232,7 @@ export default function Landing() {
       <section className="max-w-3xl mx-auto px-6 pb-20 text-center">
         <div className="inline-flex items-center gap-2 text-[12.5px] text-text-muted">
           <Command size={14} className="text-text-faint" />
-          Keyboard-first: press <kbd className="mono text-[11px] px-1.5 py-0.5 rounded border border-border-strong bg-surface-3">⌘K</kbd> anywhere in the workspace to open the command palette.
+          Keyboard-first: press <kbd className="mono text-[11px] px-1.5 py-0.5 rounded border border-border-strong bg-surface-3">{modKey}K</kbd> anywhere in the workspace to open the command palette.
         </div>
       </section>
 

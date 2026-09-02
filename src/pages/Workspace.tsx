@@ -21,6 +21,7 @@ import { ToastContainer } from '../components/common/ToastContainer';
 import { useWorkspaceStore } from '../store/workspaceStore';
 import { useUiStore } from '../store/uiStore';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { setOpenFileTrigger } from '../lib/openFileBridge';
 
 function SidePanelContent({ viewMode }: { viewMode: 'code' | 'tree' | 'overview' }) {
@@ -44,12 +45,14 @@ export default function Workspace() {
   const hasDocument = useWorkspaceStore((s) => s.hasDocument);
   const viewMode = useWorkspaceStore((s) => s.viewMode);
   const loadDocument = useWorkspaceStore((s) => s.loadDocument);
+  const docName = useWorkspaceStore((s) => s.docName);
   const pushToast = useUiStore((s) => s.pushToast);
   const mobileInspectorOpen = useUiStore((s) => s.mobileInspectorOpen);
   const setMobileInspectorOpen = useUiStore((s) => s.setMobileInspectorOpen);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useKeyboardShortcuts();
+  useDocumentMeta(hasDocument ? `${docName} — JSONWeave` : 'JSONWeave — Understand your JSON, instantly');
 
   useEffect(() => {
     setOpenFileTrigger(() => fileInputRef.current?.click());

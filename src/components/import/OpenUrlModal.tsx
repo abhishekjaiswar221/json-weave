@@ -59,7 +59,7 @@ export function OpenUrlModal() {
       pushToast('success', `Loaded ${name}`);
       closeModal();
       setUrl('');
-      navigate('/workspace');
+      navigate('/');
     } catch (e) {
       if ((e as Error).name === 'AbortError') setError('The request timed out.');
       else setError('Could not fetch that URL — it may not allow cross-origin requests from a browser.');

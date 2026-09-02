@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useWorkspaceStore, type ViewMode } from '../store/workspaceStore';
 import { useUiStore } from '../store/uiStore';
 import { formatJson, minifyJson } from '../lib/formatter/format';
@@ -30,6 +31,7 @@ export function useCommands(): Command[] {
   const pushToast = useUiStore((s) => s.pushToast);
   const openModal = useUiStore((s) => s.openModal);
   const setSearchOpen = useUiStore((s) => s.setSearchOpen);
+  const navigate = useNavigate();
 
   return useMemo<Command[]>(() => {
     const setView = (mode: ViewMode) => {
@@ -148,8 +150,15 @@ export function useCommands(): Command[] {
         group: 'App',
         run: () => updateSettings({ theme: settings.theme === 'dark' ? 'light' : 'dark' }),
       },
+      {
+        id: 'go-features',
+        label: 'Go to Features & Shortcuts',
+        group: 'App',
+        keywords: 'about help docs',
+        run: () => navigate('/features'),
+      },
     ];
 
     return commands;
-  }, [source, value, docName, settings, selectedPath, setSource, setViewMode, updateSettings, pushToast, openModal, setSearchOpen, saveToRecents]);
+  }, [source, value, docName, settings, selectedPath, setSource, setViewMode, updateSettings, pushToast, openModal, setSearchOpen, saveToRecents, navigate]);
 }

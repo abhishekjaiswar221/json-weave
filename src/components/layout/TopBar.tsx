@@ -51,6 +51,12 @@ export function TopBar() {
         <Button size="sm" variant="ghost" onClick={share} title="Copy JSON to clipboard">
           <Share2 size={13} /> <span className="hidden sm:inline">Share</span>
         </Button>
+        <Link
+          to="/features"
+          className="hidden lg:inline text-[12.5px] text-text-faint hover:text-text-muted px-2 transition-colors"
+        >
+          Features
+        </Link>
         <ThemeToggle />
         <Button size="icon" variant="ghost" onClick={() => openModal('settings')} title="Settings">
           <SettingsIcon size={14} />
