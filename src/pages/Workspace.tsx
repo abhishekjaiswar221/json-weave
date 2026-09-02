@@ -22,6 +22,7 @@ import { useWorkspaceStore } from '../store/workspaceStore';
 import { useUiStore } from '../store/uiStore';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
+import { useLoadDocument } from '../hooks/useLoadDocument';
 import { setOpenFileTrigger } from '../lib/openFileBridge';
 
 function SidePanelContent({ viewMode }: { viewMode: 'code' | 'tree' | 'overview' }) {
@@ -44,9 +45,8 @@ function SidePanelContent({ viewMode }: { viewMode: 'code' | 'tree' | 'overview'
 export default function Workspace() {
   const hasDocument = useWorkspaceStore((s) => s.hasDocument);
   const viewMode = useWorkspaceStore((s) => s.viewMode);
-  const loadDocument = useWorkspaceStore((s) => s.loadDocument);
   const docName = useWorkspaceStore((s) => s.docName);
-  const pushToast = useUiStore((s) => s.pushToast);
+  const loadDocument = useLoadDocument();
   const mobileInspectorOpen = useUiStore((s) => s.mobileInspectorOpen);
   const setMobileInspectorOpen = useUiStore((s) => s.setMobileInspectorOpen);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -65,14 +65,11 @@ export default function Workspace() {
       const inEditor = active?.closest('.monaco-editor') || active?.tagName === 'TEXTAREA' || active?.tagName === 'INPUT';
       if (inEditor || hasDocument) return;
       const text = e.clipboardData?.getData('text/plain');
-      if (text) {
-        loadDocument('pasted.json', text);
-        pushToast('success', 'Pasted from clipboard');
-      }
+      if (text) loadDocument('pasted.json', text, 'Pasted from clipboard');
     };
     window.addEventListener('paste', onPaste);
     return () => window.removeEventListener('paste', onPaste);
-  }, [hasDocument, loadDocument, pushToast]);
+  }, [hasDocument, loadDocument]);
 
   // close the mobile bottom sheet automatically when leaving a panel-backed view
   useEffect(() => {
@@ -82,10 +79,7 @@ export default function Workspace() {
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    file.text().then((text) => {
-      loadDocument(file.name, text);
-      pushToast('success', `Loaded ${file.name}`);
-    });
+    file.text().then((text) => loadDocument(file.name, text, `Loaded ${file.name}`));
     e.target.value = '';
   };
 

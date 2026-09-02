@@ -1,20 +1,19 @@
 import { Upload, ClipboardPaste, Link2, FileCode } from 'lucide-react';
 import { useUiStore } from '../../store/uiStore';
-import { useWorkspaceStore } from '../../store/workspaceStore';
+import { useLoadDocument } from '../../hooks/useLoadDocument';
 import { triggerOpenFile } from '../../lib/openFileBridge';
 import { EXAMPLES } from '../../lib/examples';
 
 export function ImportMenu({ onClose }: { onClose: () => void }) {
   const openModal = useUiStore((s) => s.openModal);
   const pushToast = useUiStore((s) => s.pushToast);
-  const loadDocument = useWorkspaceStore((s) => s.loadDocument);
+  const loadDocument = useLoadDocument();
 
   const pasteFromClipboard = async () => {
     try {
       const text = await navigator.clipboard.readText();
       if (!text) return pushToast('error', 'Clipboard is empty');
-      loadDocument('pasted.json', text);
-      pushToast('success', 'Pasted from clipboard');
+      loadDocument('pasted.json', text, 'Pasted from clipboard');
     } catch {
       pushToast('error', 'Could not read clipboard — try Ctrl/Cmd+V on the page instead');
     }
@@ -36,8 +35,7 @@ export function ImportMenu({ onClose }: { onClose: () => void }) {
             icon={<FileCode size={13} />}
             label={ex.name}
             onClick={() => {
-              loadDocument(ex.name, ex.content);
-              pushToast('success', `Loaded ${ex.name}`);
+              loadDocument(ex.name, ex.content, `Loaded ${ex.name}`);
               onClose();
             }}
           />

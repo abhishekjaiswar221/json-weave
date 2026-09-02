@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { useUiStore } from '../../store/uiStore';
-import { useWorkspaceStore } from '../../store/workspaceStore';
+import { useLoadDocument } from '../../hooks/useLoadDocument';
 import { AlertTriangle } from 'lucide-react';
 
 const MAX_BYTES = 15 * 1024 * 1024; // 15 MB
@@ -12,8 +12,7 @@ const TIMEOUT_MS = 15000;
 export function OpenUrlModal() {
   const activeModal = useUiStore((s) => s.activeModal);
   const closeModal = useUiStore((s) => s.closeModal);
-  const pushToast = useUiStore((s) => s.pushToast);
-  const loadDocument = useWorkspaceStore((s) => s.loadDocument);
+  const loadDocument = useLoadDocument();
   const navigate = useNavigate();
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -55,8 +54,7 @@ export function OpenUrlModal() {
         return;
       }
       const name = parsed.pathname.split('/').filter(Boolean).pop() || 'remote.json';
-      loadDocument(name.endsWith('.json') ? name : `${name}.json`, text);
-      pushToast('success', `Loaded ${name}`);
+      loadDocument(name.endsWith('.json') ? name : `${name}.json`, text, `Loaded ${name}`);
       closeModal();
       setUrl('');
       navigate('/');

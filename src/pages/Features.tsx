@@ -7,10 +7,10 @@ import {
 } from 'lucide-react';
 import { Logo, LogoMark } from '../components/common/Logo';
 import { Button } from '../components/common/Button';
-import { useWorkspaceStore } from '../store/workspaceStore';
 import { useUiStore } from '../store/uiStore';
 import { useDragAndDrop } from '../hooks/useDragAndDrop';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
+import { useLoadDocument } from '../hooks/useLoadDocument';
 import { EXAMPLES } from '../lib/examples';
 import { modKey } from '../lib/platform';
 import { OpenUrlModal } from '../components/import/OpenUrlModal';
@@ -50,24 +50,24 @@ export default function Features() {
   );
 
   const navigate = useNavigate();
-  const loadDocument = useWorkspaceStore((s) => s.loadDocument);
+  const loadDocument = useLoadDocument();
   const openModal = useUiStore((s) => s.openModal);
   const pushToast = useUiStore((s) => s.pushToast);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const open = (name: string, content: string) => {
-    loadDocument(name, content);
+  const open = (name: string, content: string, verb: string) => {
+    loadDocument(name, content, verb);
     navigate('/');
   };
 
   const { isDragging, handlers } = useDragAndDrop((file) => {
-    file.text().then((text) => open(file.name, text));
+    file.text().then((text) => open(file.name, text, `Loaded ${file.name}`));
   });
 
   useEffect(() => {
     const onPaste = (e: ClipboardEvent) => {
       const text = e.clipboardData?.getData('text/plain');
-      if (text && text.trim().length > 0) open('pasted.json', text);
+      if (text && text.trim().length > 0) open('pasted.json', text, 'Pasted from clipboard');
     };
     window.addEventListener('paste', onPaste);
     return () => window.removeEventListener('paste', onPaste);
@@ -76,7 +76,7 @@ export default function Features() {
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) file.text().then((text) => open(file.name, text));
+    if (file) file.text().then((text) => open(file.name, text, `Loaded ${file.name}`));
   };
 
   return (
@@ -123,7 +123,7 @@ export default function Features() {
             onClick={async () => {
               try {
                 const text = await navigator.clipboard.readText();
-                if (text) open('pasted.json', text);
+                if (text) open('pasted.json', text, 'Pasted from clipboard');
                 else pushToast('error', 'Clipboard is empty');
               } catch {
                 pushToast('info', 'Press Ctrl/Cmd+V anywhere on this page');
@@ -132,7 +132,7 @@ export default function Features() {
           >
             <ClipboardPaste size={14} /> Paste JSON
           </Button>
-          <Button variant="ghost" onClick={() => open(EXAMPLES[0].name, EXAMPLES[0].content)}>
+          <Button variant="ghost" onClick={() => open(EXAMPLES[0].name, EXAMPLES[0].content, `Loaded ${EXAMPLES[0].name}`)}>
             <FileCode size={14} /> Try an example
           </Button>
         </div>

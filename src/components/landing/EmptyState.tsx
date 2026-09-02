@@ -3,30 +3,27 @@ import clsx from 'clsx';
 import { LogoMark } from '../common/Logo';
 import { Button } from '../common/Button';
 import { useDragAndDrop } from '../../hooks/useDragAndDrop';
+import { useLoadDocument } from '../../hooks/useLoadDocument';
 import { useWorkspaceStore } from '../../store/workspaceStore';
 import { useUiStore } from '../../store/uiStore';
 import { triggerOpenFile } from '../../lib/openFileBridge';
 import { EXAMPLES } from '../../lib/examples';
 
 export function EmptyState() {
-  const loadDocument = useWorkspaceStore((s) => s.loadDocument);
+  const loadDocument = useLoadDocument();
   const recents = useWorkspaceStore((s) => s.recents);
   const openModal = useUiStore((s) => s.openModal);
   const pushToast = useUiStore((s) => s.pushToast);
 
   const { isDragging, handlers } = useDragAndDrop((file) => {
-    file.text().then((text) => {
-      loadDocument(file.name, text);
-      pushToast('success', `Loaded ${file.name}`);
-    });
+    file.text().then((text) => loadDocument(file.name, text, `Loaded ${file.name}`));
   });
 
   const pasteFromClipboard = async () => {
     try {
       const text = await navigator.clipboard.readText();
       if (!text) return pushToast('error', 'Clipboard is empty');
-      loadDocument('pasted.json', text);
-      pushToast('success', 'Pasted from clipboard');
+      loadDocument('pasted.json', text, 'Pasted from clipboard');
     } catch {
       pushToast('error', 'Press Ctrl/Cmd+V on this page instead');
     }
@@ -60,8 +57,7 @@ export function EmptyState() {
         <button
           onClick={() => {
             const ex = EXAMPLES[0];
-            loadDocument(ex.name, ex.content);
-            pushToast('success', `Loaded ${ex.name}`);
+            loadDocument(ex.name, ex.content, `Loaded ${ex.name}`);
           }}
           className="flex items-center gap-2 text-[12.5px] text-text-muted hover:text-text px-2 py-1.5 rounded-md hover:bg-surface-2"
         >
@@ -78,10 +74,7 @@ export function EmptyState() {
             {recents.slice(0, 5).map((r) => (
               <button
                 key={r.id}
-                onClick={() => {
-                  loadDocument(r.name, r.content);
-                  pushToast('success', `Loaded ${r.name}`);
-                }}
+                onClick={() => loadDocument(r.name, r.content, `Loaded ${r.name}`)}
                 className="flex items-center justify-between gap-2 text-[12px] text-text-muted hover:text-text px-2 py-1 rounded-md hover:bg-surface-2 mono"
               >
                 <span className="truncate">{r.name}</span>
