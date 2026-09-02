@@ -55,7 +55,12 @@ export const DEFAULT_SETTINGS: AppSettings = {
 const KEYS = {
   settings: 'jsonweave:settings',
   recents: 'jsonweave:recents',
+  sidePanelWidth: 'jsonweave:sidePanelWidth',
 };
+
+/** Default/min/max for the draggable divider between the editor and the
+ *  details column (Inspector/Tree/Overview) — see ResizeHandle.tsx. */
+export const SIDE_PANEL_WIDTH = { default: 380, min: 280, max: 640 };
 
 const MAX_RECENTS = 12;
 
@@ -108,4 +113,14 @@ export function removeRecent(id: string): RecentDocument[] {
 
 export function clearRecents() {
   localStorage.removeItem(KEYS.recents);
+}
+
+export function loadSidePanelWidth(): number {
+  const raw = Number(localStorage.getItem(KEYS.sidePanelWidth));
+  if (!Number.isFinite(raw) || raw <= 0) return SIDE_PANEL_WIDTH.default;
+  return Math.min(SIDE_PANEL_WIDTH.max, Math.max(SIDE_PANEL_WIDTH.min, raw));
+}
+
+export function saveSidePanelWidth(px: number) {
+  localStorage.setItem(KEYS.sidePanelWidth, String(Math.round(px)));
 }

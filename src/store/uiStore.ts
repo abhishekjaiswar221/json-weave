@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { loadSettings, saveSettings, type AppSettings } from '../lib/storage/storage';
+import { loadSettings, saveSettings, loadSidePanelWidth, saveSidePanelWidth, type AppSettings } from '../lib/storage/storage';
 
 export type ModalKind = 'settings' | 'repair' | 'openUrl' | 'import' | 'export' | 'diff-setup' | null;
 
@@ -18,6 +18,7 @@ interface UiState {
   toasts: Toast[];
   settings: AppSettings;
   mobileInspectorOpen: boolean;
+  sidePanelWidth: number;
 
   setCommandPaletteOpen: (open: boolean) => void;
   openModal: (modal: ModalKind) => void;
@@ -28,6 +29,7 @@ interface UiState {
   dismissToast: (id: string) => void;
   updateSettings: (patch: Partial<AppSettings>) => void;
   setMobileInspectorOpen: (open: boolean) => void;
+  setSidePanelWidth: (px: number) => void;
 }
 
 export const useUiStore = create<UiState>((set, get) => ({
@@ -38,6 +40,7 @@ export const useUiStore = create<UiState>((set, get) => ({
   toasts: [],
   settings: loadSettings(),
   mobileInspectorOpen: false,
+  sidePanelWidth: loadSidePanelWidth(),
 
   setCommandPaletteOpen: (open) => set({ commandPaletteOpen: open }),
   openModal: (modal) => set({ activeModal: modal }),
@@ -66,4 +69,9 @@ export const useUiStore = create<UiState>((set, get) => ({
     set({ settings: next });
   },
   setMobileInspectorOpen: (open) => set({ mobileInspectorOpen: open }),
+
+  setSidePanelWidth: (px) => {
+    set({ sidePanelWidth: px });
+    saveSidePanelWidth(px);
+  },
 }));

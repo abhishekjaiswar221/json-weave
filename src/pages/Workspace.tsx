@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { TopBar } from '../components/layout/TopBar';
 import { Toolbar } from '../components/layout/Toolbar';
 import { StatusBar } from '../components/layout/StatusBar';
+import { ResizeHandle } from '../components/layout/ResizeHandle';
 import { JsonEditor } from '../components/editor/JsonEditor';
 import { InspectorPanel } from '../components/inspector/InspectorPanel';
 import { TreeView } from '../components/tree/TreeView';
@@ -47,6 +48,7 @@ export default function Workspace() {
   const viewMode = useWorkspaceStore((s) => s.viewMode);
   const docName = useWorkspaceStore((s) => s.docName);
   const loadDocument = useLoadDocument();
+  const sidePanelWidth = useUiStore((s) => s.sidePanelWidth);
   const mobileInspectorOpen = useUiStore((s) => s.mobileInspectorOpen);
   const setMobileInspectorOpen = useUiStore((s) => s.setMobileInspectorOpen);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -100,12 +102,13 @@ export default function Workspace() {
           <DiffView />
         ) : (
           <div className="h-full flex">
-            <div className="flex-1 min-w-0 md:border-r border-border">
+            <div className="flex-1 min-w-0">
               <JsonEditor />
             </div>
 
-            {/* Desktop: persistent side column. Mobile: bottom sheet, opened via the FAB. */}
-            <div className="hidden md:flex md:w-95 md:shrink-0 md:flex-col">
+            {/* Desktop: persistent, resizable side column. Mobile: bottom sheet, opened via the FAB. */}
+            <ResizeHandle />
+            <div className="hidden md:flex md:shrink-0 md:flex-col" style={{ width: sidePanelWidth }}>
               <SidePanelContent viewMode={viewMode} />
             </div>
 
