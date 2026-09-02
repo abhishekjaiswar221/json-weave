@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FolderOpen, Download, Share2, Settings as SettingsIcon, ChevronDown } from 'lucide-react';
 import { LogoMark } from '../common/Logo';
 import { Button } from '../common/Button';
+import { ThemeToggle } from '../common/ThemeToggle';
 import { useUiStore } from '../../store/uiStore';
 import { useWorkspaceStore } from '../../store/workspaceStore';
 import { ImportMenu } from '../import/ImportMenu';
@@ -50,6 +51,7 @@ export function TopBar() {
         <Button size="sm" variant="ghost" onClick={share} title="Copy JSON to clipboard">
           <Share2 size={13} /> <span className="hidden sm:inline">Share</span>
         </Button>
+        <ThemeToggle />
         <Button size="icon" variant="ghost" onClick={() => openModal('settings')} title="Settings">
           <SettingsIcon size={14} />
         </Button>
