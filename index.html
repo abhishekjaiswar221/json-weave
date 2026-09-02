@@ -18,6 +18,23 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet" />
+
+    <script>
+      // Applies the persisted theme before first paint so an explicit
+      // light/dark preference never flashes the system default first (the
+      // 'system' preference itself never needs this — it's driven purely by
+      // the prefers-color-scheme media query in index.css). Kept in sync
+      // with jsonweave:settings' shape in src/lib/storage/storage.ts.
+      (function () {
+        try {
+          var raw = localStorage.getItem('jsonweave:settings');
+          var theme = raw && JSON.parse(raw).theme;
+          if (theme === 'light' || theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', theme);
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

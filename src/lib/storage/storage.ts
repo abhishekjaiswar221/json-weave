@@ -36,7 +36,7 @@ export interface AppSettings {
 
 export const DEFAULT_SETTINGS: AppSettings = {
   editor: {
-    fontSize: 13,
+    fontSize: 14,
     tabSize: 2,
     wordWrap: true,
     minimap: false,
@@ -49,7 +49,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
     sortKeys: false,
     trailingNewline: true,
   },
-  theme: 'dark',
+  theme: 'system',
 };
 
 const KEYS = {
