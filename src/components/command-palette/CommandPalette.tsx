@@ -51,11 +51,17 @@ export function CommandPalette() {
   return (
     <div className="fixed inset-0 z-[60] flex items-start justify-center pt-[16vh] px-4 animate-fade-in">
       <div className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
-      <div className="relative w-full max-w-lg rounded-lg border border-border bg-surface shadow-2xl overflow-hidden animate-scale-in">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Command palette"
+        className="relative w-full max-w-lg rounded-lg border border-border bg-surface shadow-2xl overflow-hidden animate-scale-in"
+      >
         <div className="flex items-center gap-2.5 px-4 py-3 border-b border-border">
           <Search size={15} className="text-text-faint shrink-0" />
           <input
             ref={inputRef}
+            aria-label="Search commands"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => {
