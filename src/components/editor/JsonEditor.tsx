@@ -6,7 +6,7 @@ import { useWorkspaceStore } from '../../store/workspaceStore';
 import { useUiStore } from '../../store/uiStore';
 import { useResolvedTheme } from '../../hooks/useThemeSync';
 import { findPathAtOffset } from '../../lib/parser/tolerantParser';
-import { draculaThemeData, DRACULA_THEME_NAME } from './draculaTheme';
+import { darkThemeData, DARK_THEME_NAME } from './darkTheme';
 import { lightThemeData, LIGHT_THEME_NAME } from './lightTheme';
 import type { AstNode, ObjectProperty } from '../../lib/parser/types';
 
@@ -69,14 +69,14 @@ export function JsonEditor() {
   const clearJump = useWorkspaceStore((s) => s.clearJump);
   const editorSettings = useUiStore((s) => s.settings.editor);
   const resolvedTheme = useResolvedTheme();
-  const monacoThemeName = resolvedTheme === 'light' ? LIGHT_THEME_NAME : DRACULA_THEME_NAME;
+  const monacoThemeName = resolvedTheme === 'light' ? LIGHT_THEME_NAME : DARK_THEME_NAME;
   const [editorReady, setEditorReady] = useState(false);
 
   const handleMount: OnMount = useCallback((editor, monaco) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
     if (!themeRegistered) {
-      monaco.editor.defineTheme(DRACULA_THEME_NAME, draculaThemeData);
+      monaco.editor.defineTheme(DARK_THEME_NAME, darkThemeData);
       monaco.editor.defineTheme(LIGHT_THEME_NAME, lightThemeData);
       themeRegistered = true;
     }
@@ -173,7 +173,7 @@ export function JsonEditor() {
   }, [editorSettings]);
 
   return (
-    <div className={clsx('editor-dracula h-full w-full', resolvedTheme === 'light' && 'light')}>
+    <div className={clsx('editor-json h-full w-full', resolvedTheme === 'light' && 'light')}>
       <Editor
         height="100%"
         defaultLanguage="json"
