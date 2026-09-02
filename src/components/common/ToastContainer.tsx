@@ -18,9 +18,10 @@ export function ToastContainer() {
     <div
       role="status"
       aria-live="polite"
-      // Top-right, clear of the 48px top bar — never over the editor, the
-      // details column, the toolbar, or the command palette (all lower z-index).
-      className="fixed top-14 right-4 z-100 flex flex-col gap-2 w-75"
+      // Top-right, clear of the 48px top bar *and* the 44px toolbar beneath
+      // it — never over the editor, the details column, the view-mode tabs,
+      // or the command palette (all lower z-index).
+      className="fixed top-24 right-4 z-100 flex flex-col gap-2 w-75"
     >
       {toasts.map((t) => (
         <div
