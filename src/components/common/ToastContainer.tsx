@@ -15,11 +15,17 @@ export function ToastContainer() {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-100 flex flex-col gap-2 w-75">
+    <div
+      role="status"
+      aria-live="polite"
+      // Top-right, clear of the 48px top bar — never over the editor, the
+      // details column, the toolbar, or the command palette (all lower z-index).
+      className="fixed top-14 right-4 z-100 flex flex-col gap-2 w-75"
+    >
       {toasts.map((t) => (
         <div
           key={t.id}
-          className="flex items-center gap-2 rounded-md border border-border bg-surface-2 px-3 py-2.5 shadow-lg animate-slide-up"
+          className="flex items-center gap-2 rounded-md border border-border bg-surface-2 px-3 py-2.5 shadow-lg animate-toast-in"
         >
           {icons[t.kind]}
           <span className="text-[12.5px] text-text flex-1">{t.message}</span>

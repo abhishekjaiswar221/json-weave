@@ -33,6 +33,7 @@
   --animate-fade-in: fade-in 180ms ease-out;
   --animate-scale-in: scale-in 150ms ease-out;
   --animate-slide-up: slide-up 200ms ease-out;
+  --animate-toast-in: toast-in 200ms ease-out;
 }
 
 @keyframes fade-in {
@@ -45,6 +46,10 @@
 }
 @keyframes slide-up {
   from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(-6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -158,6 +163,15 @@ body {
   --dracula-pink: #be123c;
   --dracula-purple: #6d28d9;
   --dracula-yellow: #854d0e;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @keyframes pulse-ring {
