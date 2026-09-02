@@ -97,13 +97,17 @@ export function Toolbar() {
         </Button>
       </div>
 
-      <div className="flex items-center gap-0.5 rounded-md border border-border bg-surface-2 p-0.5 mx-2.5 mb-2 lg:ml-0 lg:mr-2.5 lg:mb-0 overflow-x-auto no-scrollbar shrink-0 w-max max-w-[calc(100%-1.25rem)] lg:max-w-none">
+      {/* Full-width, evenly-distributed segmented control below md (a
+          content-sized pill reads as small/off-center on a phone-width
+          row); back to its natural compact size — today's default look —
+          from md up. */}
+      <div className="flex items-center gap-0.5 rounded-md border border-border bg-surface-2 p-0.5 mx-2.5 mb-2 w-auto md:w-max lg:ml-0 lg:mr-2.5 lg:mb-0 overflow-x-auto no-scrollbar shrink-0">
         {VIEW_TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setViewMode(t.id)}
             className={clsx(
-              'px-2.5 h-6 rounded text-[12px] font-medium transition-colors whitespace-nowrap',
+              'flex-1 md:flex-none px-2.5 h-6 rounded text-[12px] font-medium text-center transition-colors whitespace-nowrap',
               viewMode === t.id ? 'bg-surface text-text shadow-sm' : 'text-text-faint hover:text-text-muted'
             )}
           >
