@@ -52,14 +52,14 @@ export function SettingsModal() {
 
   return (
     <Modal open onClose={closeModal} title="Settings" width="max-w-xl">
-      <div className="flex gap-5">
-        <div className="w-32 shrink-0 flex flex-col gap-0.5">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-5">
+        <div className="flex gap-0.5 overflow-x-auto no-scrollbar border-b border-border pb-2 sm:w-32 sm:shrink-0 sm:flex-col sm:border-b-0 sm:pb-0">
           {TABS.map((t) => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
               className={clsx(
-                'text-left text-[12.5px] px-2.5 py-1.5 rounded-md',
+                'shrink-0 whitespace-nowrap text-left text-[12.5px] px-2.5 py-1.5 rounded-md',
                 tab === t.id ? 'bg-accent-muted text-accent' : 'text-text-muted hover:bg-surface-2'
               )}
             >

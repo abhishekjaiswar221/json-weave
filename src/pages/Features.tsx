@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import {
   FolderOpen, ClipboardPaste, FileCode, ArrowRight, WandSparkles, Wrench, ListTree,
-  SearchCode, Eye, GitCompare, ShieldCheck, Command,
+  SearchCode, Eye, GitCompare, ShieldCheck, Command, Link2,
 } from 'lucide-react';
 import { Logo, LogoMark } from '../components/common/Logo';
 import { Button } from '../components/common/Button';
@@ -91,13 +91,16 @@ export default function Features() {
         </div>
       )}
 
-      {/* nav */}
-      <header className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Logo size={24} />
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={() => openModal('openUrl')}>Open from URL</Button>
+      {/* nav — same icon-first, hide-label-below-sm pattern as the workspace's own TopBar */}
+      <header className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-2">
+        <Logo size={22} className="shrink-0" />
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <Button variant="ghost" size="sm" onClick={() => openModal('openUrl')}>
+            <Link2 size={13} /> <span className="hidden sm:inline">Open from URL</span>
+          </Button>
           <Button variant="primary" size="sm" onClick={() => navigate('/')}>
-            Open the workspace <ArrowRight size={12} />
+            <span className="hidden sm:inline">Open the workspace</span>
+            <span className="sm:hidden">Open</span> <ArrowRight size={12} />
           </Button>
         </div>
       </header>
@@ -230,11 +233,16 @@ export default function Features() {
       </section>
 
       {/* command palette hint */}
-      <section className="max-w-3xl mx-auto px-6 pb-20 text-center">
-        <div className="inline-flex items-center gap-2 text-[12.5px] text-text-muted">
-          <Command size={14} className="text-text-faint" />
-          Keyboard-first: press <kbd className="mono text-[11px] px-1.5 py-0.5 rounded border border-border-strong bg-surface-3">{modKey}K</kbd> anywhere in the workspace to open the command palette.
-        </div>
+      <section className="max-w-2xl mx-auto px-6 pb-20 text-center">
+        {/* Plain inline text flow rather than a flex row — flexing raw text
+            nodes alongside the icon and <kbd> made each text run wrap as its
+            own column instead of the line wrapping as a whole. */}
+        <p className="text-[12.5px] leading-relaxed text-text-muted">
+          <Command size={14} className="mr-1.5 inline-block align-text-bottom text-text-faint" />
+          Keyboard-first: press{' '}
+          <kbd className="mono text-[11px] px-1.5 py-0.5 rounded border border-border-strong bg-surface-3">{modKey}K</kbd>{' '}
+          anywhere in the workspace to open the command palette.
+        </p>
       </section>
 
       {/* final CTA */}

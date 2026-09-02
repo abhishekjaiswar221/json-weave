@@ -135,6 +135,18 @@ body {
   font-feature-settings: "liga" 1, "calt" 1;
 }
 
+/* For horizontally-scrollable strips (the toolbar's action-button row on
+   narrow screens, the mobile view-tab row) where the persistent thin
+   scrollbar reads as a stray line sitting against whatever's below it,
+   rather than a useful affordance — touch/wheel scrolling still works. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Editor surface tokens — scoped, never applied to app chrome. The
    background is the app's own canvas token; the text uses JSON syntax
    colors modeled on JetBrains' own default color schemes (Darcula for

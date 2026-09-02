@@ -37,7 +37,7 @@ export function Toolbar() {
     // particular are the only way to switch views, and used to disappear
     // completely on phones and get clipped on tablets.
     <div className="shrink-0 border-b border-border bg-surface flex flex-col lg:flex-row lg:h-11 lg:items-center lg:justify-between lg:gap-3">
-      <div className="h-11 px-2.5 flex items-center gap-1 overflow-x-auto shrink-0">
+      <div className="h-11 px-2.5 flex items-center gap-1 overflow-x-auto no-scrollbar shrink-0">
         <Button
           size="sm"
           variant="ghost"
@@ -97,7 +97,7 @@ export function Toolbar() {
         </Button>
       </div>
 
-      <div className="flex items-center gap-0.5 rounded-md border border-border bg-surface-2 p-0.5 mx-2.5 mb-2 lg:mx-0 lg:mb-0 overflow-x-auto shrink-0 w-max max-w-[calc(100%-1.25rem)] lg:max-w-none">
+      <div className="flex items-center gap-0.5 rounded-md border border-border bg-surface-2 p-0.5 mx-2.5 mb-2 lg:ml-0 lg:mr-2.5 lg:mb-0 overflow-x-auto no-scrollbar shrink-0 w-max max-w-[calc(100%-1.25rem)] lg:max-w-none">
         {VIEW_TABS.map((t) => (
           <button
             key={t.id}

@@ -37,13 +37,27 @@ export function TopBar() {
 
       <div className="flex items-center gap-1 sm:gap-1.5">
         <div className="relative">
-          <Button size="sm" title={`Open JSON (${modKey}+O)`} onClick={() => setOpenImport((v) => !v)}>
+          <Button
+            size="sm"
+            title={`Open JSON (${modKey}+O)`}
+            onClick={() => {
+              setOpenExport(false);
+              setOpenImport((v) => !v);
+            }}
+          >
             <FolderOpen size={13} /> <span className="hidden sm:inline">Open</span> <ChevronDown size={11} />
           </Button>
           {openImport && <ImportMenu onClose={() => setOpenImport(false)} />}
         </div>
         <div className="relative">
-          <Button size="sm" title={`Download JSON (${modKey}+S)`} onClick={() => setOpenExport((v) => !v)}>
+          <Button
+            size="sm"
+            title={`Download JSON (${modKey}+S)`}
+            onClick={() => {
+              setOpenImport(false);
+              setOpenExport((v) => !v);
+            }}
+          >
             <Download size={13} /> <span className="hidden sm:inline">Save</span> <ChevronDown size={11} />
           </Button>
           {openExport && <ExportMenu onClose={() => setOpenExport(false)} />}

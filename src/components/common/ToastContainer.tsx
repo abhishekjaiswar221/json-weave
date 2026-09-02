@@ -18,10 +18,12 @@ export function ToastContainer() {
     <div
       role="status"
       aria-live="polite"
-      // Top-right, clear of the 48px top bar *and* the 44px toolbar beneath
-      // it — never over the editor, the details column, the view-mode tabs,
-      // or the command palette (all lower z-index).
-      className="fixed top-24 right-4 z-100 flex flex-col gap-2 w-80 max-w-[calc(100vw-2rem)]"
+      // Top-right, clear of the 48px top bar *and* the toolbar beneath it —
+      // never over the editor, the details column, the view-mode tabs, or
+      // the command palette (all lower z-index). The toolbar itself is
+      // taller below `lg` (it stacks into two rows there — see
+      // Toolbar.tsx), so the clearance below it grows to match.
+      className="fixed top-34 lg:top-24 right-4 z-100 flex flex-col gap-2 w-80 max-w-[calc(100vw-2rem)]"
     >
       {toasts.map((t) => (
         <div
