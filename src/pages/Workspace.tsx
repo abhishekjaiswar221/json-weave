@@ -52,7 +52,7 @@ export default function Workspace() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useKeyboardShortcuts();
-  useDocumentMeta(hasDocument ? `${docName} — JSONWeave` : 'JSONWeave — Understand your JSON, instantly');
+  useDocumentMeta(hasDocument ? `${docName} — JSONWeave` : 'JSONWeave — Understand your JSON, instantly', undefined, '/');
 
   useEffect(() => {
     setOpenFileTrigger(() => fileInputRef.current?.click());

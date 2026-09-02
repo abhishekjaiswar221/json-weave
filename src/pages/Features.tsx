@@ -45,7 +45,8 @@ const SHORTCUTS = [
 export default function Features() {
   useDocumentMeta(
     'JSONWeave — Features & shortcuts',
-    'What JSONWeave does, how its keyboard-first workflow works, and why local-first JSON tooling matters.'
+    'What JSONWeave does, how its keyboard-first workflow works, and why local-first JSON tooling matters.',
+    '/features'
   );
 
   const navigate = useNavigate();
