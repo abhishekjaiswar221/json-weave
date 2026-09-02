@@ -12,7 +12,7 @@ const Features = lazy(() => import('./pages/Features'));
 
 function RouteFallback() {
   return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center gap-3 bg-canvas">
+    <div className="h-dvh w-screen flex flex-col items-center justify-center gap-3 bg-canvas">
       <LogoMark size={32} />
       <span className="text-[12.5px] text-text-faint">Loading…</span>
     </div>

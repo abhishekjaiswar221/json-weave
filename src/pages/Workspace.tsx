@@ -88,7 +88,11 @@ export default function Workspace() {
   const isPanelView = viewMode === 'code' || viewMode === 'tree' || viewMode === 'overview';
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-canvas overflow-hidden">
+    // 100dvh, not 100vh — on mobile browsers 100vh includes the space behind
+    // the address bar/toolbar chrome, which isn't actually visible, so the
+    // last few pixels of content (e.g. the empty-state's dashed border) were
+    // getting cut off there. dvh tracks the real visible viewport instead.
+    <div className="h-dvh w-screen flex flex-col bg-canvas overflow-hidden">
       <input ref={fileInputRef} type="file" accept=".json,application/json" className="hidden" onChange={onFileChange} />
       <TopBar />
       <Toolbar />

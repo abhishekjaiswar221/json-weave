@@ -18,6 +18,9 @@ export interface EditorSettings {
   lineNumbers: boolean;
   bracketMatching: boolean;
   ligatures: boolean;
+  /** Ctrl/Cmd + mouse wheel zooms the editor's font size, like most IDEs —
+   *  see JsonEditor.tsx (Monaco's own `mouseWheelZoom` option). */
+  mouseWheelZoom: boolean;
 }
 
 export interface FormattingSettings {
@@ -43,6 +46,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
     lineNumbers: true,
     bracketMatching: true,
     ligatures: true,
+    mouseWheelZoom: true,
   },
   formatting: {
     indent: 2,
@@ -61,6 +65,14 @@ const KEYS = {
 /** Default/min/max for the draggable divider between the editor and the
  *  details column (Inspector/Tree/Overview) — see ResizeHandle.tsx. */
 export const SIDE_PANEL_WIDTH = { default: 380, min: 280, max: 640 };
+
+/** Bounds for the editor font size — both the Settings field and Ctrl/Cmd
+ *  + wheel zoom (see JsonEditor.tsx) clamp to this range. */
+export const FONT_SIZE = { default: 14, min: 10, max: 32 };
+
+export function clampFontSize(px: number): number {
+  return Math.min(FONT_SIZE.max, Math.max(FONT_SIZE.min, Math.round(px)));
+}
 
 const MAX_RECENTS = 12;
 

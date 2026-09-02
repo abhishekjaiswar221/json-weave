@@ -4,6 +4,7 @@ import Editor, { type OnMount } from '@monaco-editor/react';
 import type * as Monaco from 'monaco-editor';
 import { useWorkspaceStore } from '../../store/workspaceStore';
 import { useUiStore } from '../../store/uiStore';
+import { clampFontSize } from '../../lib/storage/storage';
 import { useResolvedTheme } from '../../hooks/useThemeSync';
 import { findPathAtOffset } from '../../lib/parser/tolerantParser';
 import { darkThemeData, DARK_THEME_NAME } from './darkTheme';
@@ -68,6 +69,7 @@ export function JsonEditor() {
   const jumpToOffset = useWorkspaceStore((s) => s.jumpToOffset);
   const clearJump = useWorkspaceStore((s) => s.clearJump);
   const editorSettings = useUiStore((s) => s.settings.editor);
+  const updateSettings = useUiStore((s) => s.updateSettings);
   const resolvedTheme = useResolvedTheme();
   const monacoThemeName = resolvedTheme === 'light' ? LIGHT_THEME_NAME : DARK_THEME_NAME;
   const [editorReady, setEditorReady] = useState(false);
@@ -91,11 +93,27 @@ export function JsonEditor() {
       if (path) selectPath(path);
     });
 
+    // Ctrl/Cmd+wheel zoom (when enabled — editorSettings.mouseWheelZoom)
+    // changes Monaco's own font size option directly; mirror that back into
+    // our persisted setting so the Settings field and next session agree
+    // with what's actually on screen, rather than snapping back on reload.
+    editor.onDidChangeConfiguration((e) => {
+      const monaco = monacoRef.current;
+      if (!monaco || !e.hasChanged(monaco.editor.EditorOption.fontSize)) return;
+      const raw = editor.getOption(monaco.editor.EditorOption.fontSize);
+      const clamped = clampFontSize(raw);
+      if (clamped !== raw) editor.updateOptions({ fontSize: clamped });
+      const current = useUiStore.getState().settings.editor;
+      if (current.fontSize !== clamped) {
+        updateSettings({ editor: { ...current, fontSize: clamped } });
+      }
+    });
+
     // The editor mounts asynchronously (Monaco loads as its own chunk), which
     // can land after the document's first parse already happened — trigger a
     // render pass now so markers/decorations from that first parse apply.
     setEditorReady(true);
-  }, [selectPath]);
+  }, [selectPath, updateSettings]);
 
   // follow the app theme once the editor is mounted (both themes are already
   // registered by then — see handleMount)
@@ -169,6 +187,7 @@ export function JsonEditor() {
       lineNumbers: editorSettings.lineNumbers ? 'on' : 'off',
       matchBrackets: editorSettings.bracketMatching ? 'always' : 'never',
       fontLigatures: editorSettings.ligatures,
+      mouseWheelZoom: editorSettings.mouseWheelZoom,
     });
   }, [editorSettings]);
 
@@ -191,6 +210,7 @@ export function JsonEditor() {
           minimap: { enabled: editorSettings.minimap },
           lineNumbers: editorSettings.lineNumbers ? 'on' : 'off',
           matchBrackets: editorSettings.bracketMatching ? 'always' : 'never',
+          mouseWheelZoom: editorSettings.mouseWheelZoom,
           renderLineHighlight: 'line',
           scrollBeyondLastLine: false,
           smoothScrolling: true,

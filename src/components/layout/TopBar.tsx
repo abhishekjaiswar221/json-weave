@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FolderOpen, Download, Share2, Settings as SettingsIcon, ChevronDown } from 'lucide-react';
+import { FolderOpen, Download, Share2, Settings as SettingsIcon, ChevronDown, Info } from 'lucide-react';
 import { LogoMark } from '../common/Logo';
 import { Button } from '../common/Button';
 import { ThemeToggle } from '../common/ThemeToggle';
@@ -67,9 +67,10 @@ export function TopBar() {
         </Button>
         <Link
           to="/features"
-          className="hidden lg:inline text-[12.5px] text-text-faint hover:text-text-muted px-2 transition-colors"
+          title="Features & shortcuts"
+          className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-md text-xs font-medium text-text-muted hover:text-text hover:bg-surface-2 transition-colors whitespace-nowrap"
         >
-          Features
+          <Info size={13} /> <span className="hidden sm:inline">Features</span>
         </Link>
         <ThemeToggle />
         <Button size="icon" variant="ghost" onClick={() => openModal('settings')} title="Settings">

@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import { ShieldCheck } from 'lucide-react';
 import { Modal } from '../common/Modal';
 import { useUiStore } from '../../store/uiStore';
-import type { AppTheme } from '../../lib/storage/storage';
+import { FONT_SIZE, clampFontSize, type AppTheme } from '../../lib/storage/storage';
+import { modKey } from '../../lib/platform';
 
 type Tab = 'editor' | 'formatting' | 'appearance' | 'privacy';
 const TABS: { id: Tab; label: string }[] = [
@@ -72,15 +73,26 @@ export function SettingsModal() {
           {tab === 'editor' && (
             <>
               <FieldRow label="Font size">
-                <select
-                  className={selectClass}
+                <input
+                  type="number"
+                  min={FONT_SIZE.min}
+                  max={FONT_SIZE.max}
                   value={settings.editor.fontSize}
-                  onChange={(e) => updateSettings({ editor: { ...settings.editor, fontSize: Number(e.target.value) } })}
-                >
-                  {[12, 13, 14, 15, 16, 18].map((s) => (
-                    <option key={s} value={s}>{s}px</option>
-                  ))}
-                </select>
+                  onChange={(e) => {
+                    const n = Number(e.target.value);
+                    if (Number.isFinite(n)) updateSettings({ editor: { ...settings.editor, fontSize: n } });
+                  }}
+                  onBlur={(e) =>
+                    updateSettings({ editor: { ...settings.editor, fontSize: clampFontSize(Number(e.target.value) || FONT_SIZE.default) } })
+                  }
+                  className={clsx(selectClass, 'w-16 text-right')}
+                />
+              </FieldRow>
+              <FieldRow label={`Zoom with ${modKey} + Scroll`}>
+                <Toggle
+                  checked={settings.editor.mouseWheelZoom}
+                  onChange={(v) => updateSettings({ editor: { ...settings.editor, mouseWheelZoom: v } })}
+                />
               </FieldRow>
               <FieldRow label="Tab size">
                 <select
