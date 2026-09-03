@@ -86,7 +86,7 @@ export default function Features() {
       {isDragging && (
         <div className="fixed inset-0 z-50 bg-canvas/90 backdrop-blur-sm flex items-center justify-center">
           <div className="border-2 border-dashed border-accent rounded-xl px-16 py-14 drop-active">
-            <p className="text-[15px] text-accent font-medium">Drop your JSON file to open it</p>
+            <p className="text-[15px] text-accent-text font-medium">Drop your JSON file to open it</p>
           </div>
         </div>
       )}
@@ -179,7 +179,7 @@ export default function Features() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border rounded-xl overflow-hidden border border-border">
           {FEATURES.map((f) => (
             <div key={f.title} className="bg-surface p-5">
-              <f.icon size={16} className="text-accent mb-3" />
+              <f.icon size={16} className="text-accent-text mb-3" />
               <h3 className="text-[13px] font-medium text-text">{f.title}</h3>
               <p className="mt-1.5 text-[12px] text-text-muted leading-relaxed">{f.desc}</p>
             </div>

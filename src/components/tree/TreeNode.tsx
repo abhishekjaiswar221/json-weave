@@ -123,7 +123,7 @@ export const TreeNode = memo(function TreeNode({ label, value, path, depth }: Tr
                 setVisibleCount((c) => c + CHUNK);
               }}
               style={{ paddingLeft: (depth + 1) * 16 + 24 }}
-              className="text-[11.5px] mono text-accent hover:text-accent-hover py-1"
+              className="text-[11.5px] mono text-accent-text hover:text-accent-hover py-1"
             >
               Show {Math.min(CHUNK, entries.length - visibleCount)} more of {entries.length - visibleCount}…
             </button>

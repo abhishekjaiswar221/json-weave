@@ -60,7 +60,7 @@ export function InspectorPanel() {
         <div className="mono text-[13.5px] font-semibold text-text truncate">{label}</div>
         <button
           onClick={() => copy(pathString, 'path')}
-          className="mt-1 flex items-center gap-1.5 mono text-[11.5px] text-text-muted hover:text-accent transition-colors group"
+          className="mt-1 flex items-center gap-1.5 mono text-[11.5px] text-text-muted hover:text-accent-text transition-colors group"
           title="Copy path"
         >
           <span className="truncate">{pathString}</span>

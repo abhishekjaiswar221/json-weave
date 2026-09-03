@@ -107,7 +107,7 @@ export function SettingsModal() {
               onClick={() => setTab(t.id)}
               className={clsx(
                 'shrink-0 whitespace-nowrap text-left text-[12.5px] px-2.5 py-1.5 rounded-md',
-                tab === t.id ? 'bg-accent-muted text-accent' : 'text-text-muted hover:bg-surface-2'
+                tab === t.id ? 'bg-accent-muted text-accent-text' : 'text-text-muted hover:bg-surface-2'
               )}
             >
               {t.label}
@@ -185,7 +185,7 @@ export function SettingsModal() {
                   onClick={() => updateSettings({ theme: th })}
                   className={clsx(
                     'flex-1 rounded-md border px-3 py-2 text-[12px] capitalize',
-                    settings.theme === th ? 'border-accent text-accent bg-accent-muted' : 'border-border text-text-muted hover:bg-surface-2'
+                    settings.theme === th ? 'border-accent text-accent-text bg-accent-muted' : 'border-border text-text-muted hover:bg-surface-2'
                   )}
                 >
                   {th}

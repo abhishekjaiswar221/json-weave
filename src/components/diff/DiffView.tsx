@@ -48,7 +48,7 @@ export function DiffView() {
         <div className="bg-surface flex flex-col min-h-0">
           <div className="px-3 py-1.5 text-[11px] text-text-faint border-b border-border shrink-0 flex items-center justify-between">
             <span>Modified</span>
-            <label className="flex items-center gap-1 text-accent hover:text-accent-hover cursor-pointer text-[11px]">
+            <label className="flex items-center gap-1 text-accent-text hover:text-accent-hover cursor-pointer text-[11px]">
               <Upload size={11} /> Load file
               <input type="file" accept=".json,application/json" className="hidden" onChange={(e) => e.target.files?.[0] && loadFile(e.target.files[0])} />
             </label>
