@@ -6,8 +6,8 @@ import { useWorkspaceStore } from '../../store/workspaceStore';
 import { useUiStore } from '../../store/uiStore';
 import { useResolvedTheme } from '../../hooks/useThemeSync';
 import { findPathAtOffset } from '../../lib/parser/tolerantParser';
-import { darkThemeData, DARK_THEME_NAME } from './darkTheme';
-import { lightThemeData, LIGHT_THEME_NAME } from './lightTheme';
+import { DARK_THEME_NAME } from './darkTheme';
+import { LIGHT_THEME_NAME } from './lightTheme';
 import type { AstNode, ObjectProperty } from '../../lib/parser/types';
 
 function collectDecorations(monaco: typeof Monaco, model: Monaco.editor.ITextModel, ast: AstNode | undefined) {
@@ -53,8 +53,6 @@ function collectDecorations(monaco: typeof Monaco, model: Monaco.editor.ITextMod
   return decorations;
 }
 
-let themeRegistered = false;
-
 export function JsonEditor() {
   const editorRef = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
   const monacoRef = useRef<typeof Monaco | null>(null);
@@ -75,12 +73,10 @@ export function JsonEditor() {
   const handleMount: OnMount = useCallback((editor, monaco) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
-    if (!themeRegistered) {
-      monaco.editor.defineTheme(DARK_THEME_NAME, darkThemeData);
-      monaco.editor.defineTheme(LIGHT_THEME_NAME, lightThemeData);
-      themeRegistered = true;
-    }
-    // initial theme applied by the effect below, once editorReady flips true
+    // Both themes are already registered by now — see monacoSetup.ts, which
+    // does it at module init specifically so the very first editor.create()
+    // call (this one) already has the right theme available, not just
+    // every one after it.
 
     editor.onDidChangeCursorPosition((e) => {
       const model = editor.getModel();
@@ -97,8 +93,10 @@ export function JsonEditor() {
     setEditorReady(true);
   }, [selectPath]);
 
-  // follow the app theme once the editor is mounted (both themes are already
-  // registered by then — see handleMount)
+  // follow the app theme once the editor is mounted — for *changes* after
+  // that (the user flips the theme mid-session); the initial paint already
+  // gets the right theme straight from the `theme` prop below, now that
+  // it's registered up front (see monacoSetup.ts).
   useEffect(() => {
     if (!editorReady) return;
     monacoRef.current?.editor.setTheme(monacoThemeName);

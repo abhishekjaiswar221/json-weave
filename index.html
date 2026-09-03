@@ -6,6 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#141414" />
     <meta name="color-scheme" content="dark light" />
+    <style>
+      /* Paints the correct background the instant the HTML parses, before
+         index.css (an external stylesheet — render-blocking in production,
+         but JS-injected and later in Vite's dev server) or any JS has run.
+         Without this the page briefly shows the browser's default white
+         canvas first. Mirrors index.css's own canvas-token cascade: dark by
+         default, an explicit data-theme override wins, otherwise system
+         preference decides — kept in sync with the @theme/data-theme rules
+         there. The theme-setting script below sets data-theme (if any)
+         before this can ever paint, so the override case is covered too. */
+      html, body { background: #141414; }
+      html[data-theme='light'], html[data-theme='light'] body { background: #fafafa; }
+      @media (prefers-color-scheme: light) {
+        html:not([data-theme='dark']), html:not([data-theme='dark']) body { background: #fafafa; }
+      }
+    </style>
     <title>JSONWeave — Understand your JSON, instantly</title>
     <meta name="description" content="Open, format, inspect, search and repair JSON without fighting a wall of text. A fast, private, developer-grade JSON workspace." />
     <link rel="canonical" href="https://jsonweave.vercel.app/" />
