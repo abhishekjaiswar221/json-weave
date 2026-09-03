@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { ShieldCheck } from 'lucide-react';
 import { Modal } from '../common/Modal';
@@ -42,6 +42,53 @@ function FieldRow({ label, children }: { label: string; children: React.ReactNod
 
 const selectClass = 'h-7 px-2 rounded-md border border-border-strong bg-surface-3 text-[12px] text-text outline-none focus:border-accent';
 
+/**
+ * A plain `value={settings.editor.fontSize}` number input fights the
+ * browser's own cursor/keystroke handling — every digit typed round-trips
+ * through updateSettings -> a re-render -> the input's value getting reset
+ * mid-edit, which can leave stray/reordered digits (e.g. typing "15" over
+ * "14" landing as "015"). This keeps its own draft string that's free to
+ * hold whatever the user is literally typing, and only parses + clamps +
+ * commits to the real setting on blur/Enter — the same pattern an
+ * uncontrolled input would use, but still reflecting external changes
+ * (Ctrl+wheel zoom) when the field isn't focused.
+ */
+function FontSizeField({ value, onCommit }: { value: number; onCommit: (n: number) => void }) {
+  const [draft, setDraft] = useState(String(value));
+  const focused = useRef(false);
+
+  useEffect(() => {
+    if (!focused.current) setDraft(String(value));
+  }, [value]);
+
+  const commit = () => {
+    const n = clampFontSize(Number(draft) || FONT_SIZE.default);
+    setDraft(String(n));
+    if (n !== value) onCommit(n);
+  };
+
+  return (
+    <input
+      type="number"
+      min={FONT_SIZE.min}
+      max={FONT_SIZE.max}
+      value={draft}
+      onFocus={() => {
+        focused.current = true;
+      }}
+      onChange={(e) => setDraft(e.target.value)}
+      onBlur={() => {
+        focused.current = false;
+        commit();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') (e.target as HTMLInputElement).blur();
+      }}
+      className={clsx(selectClass, 'w-16 text-right')}
+    />
+  );
+}
+
 export function SettingsModal() {
   const activeModal = useUiStore((s) => s.activeModal);
   const closeModal = useUiStore((s) => s.closeModal);
@@ -73,19 +120,9 @@ export function SettingsModal() {
           {tab === 'editor' && (
             <>
               <FieldRow label="Font size">
-                <input
-                  type="number"
-                  min={FONT_SIZE.min}
-                  max={FONT_SIZE.max}
+                <FontSizeField
                   value={settings.editor.fontSize}
-                  onChange={(e) => {
-                    const n = Number(e.target.value);
-                    if (Number.isFinite(n)) updateSettings({ editor: { ...settings.editor, fontSize: n } });
-                  }}
-                  onBlur={(e) =>
-                    updateSettings({ editor: { ...settings.editor, fontSize: clampFontSize(Number(e.target.value) || FONT_SIZE.default) } })
-                  }
-                  className={clsx(selectClass, 'w-16 text-right')}
+                  onCommit={(n) => updateSettings({ editor: { ...settings.editor, fontSize: n } })}
                 />
               </FieldRow>
               <FieldRow label={`Zoom with ${modKey} + Scroll`}>
