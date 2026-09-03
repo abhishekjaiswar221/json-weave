@@ -1,15 +1,20 @@
+import { type RefObject } from 'react';
 import { Download, Copy, FileSpreadsheet, FileText } from 'lucide-react';
 import { useUiStore } from '../../store/uiStore';
 import { useWorkspaceStore } from '../../store/workspaceStore';
+import { useAnchoredPosition } from '../../hooks/useAnchoredPosition';
 import { downloadText } from '../../lib/download';
 import { jsonToCsv, jsonToYaml, canRenderAsTable } from '../../lib/convert/convert';
 
-export function ExportMenu({ onClose }: { onClose: () => void }) {
+const MENU_WIDTH = 224; // w-56
+
+export function ExportMenu({ anchorRef, onClose }: { anchorRef: RefObject<HTMLElement | null>; onClose: () => void }) {
   const pushToast = useUiStore((s) => s.pushToast);
   const source = useWorkspaceStore((s) => s.source);
   const value = useWorkspaceStore((s) => s.value);
   const docName = useWorkspaceStore((s) => s.docName);
   const saveToRecents = useWorkspaceStore((s) => s.saveToRecents);
+  const pos = useAnchoredPosition(anchorRef, MENU_WIDTH);
 
   const baseName = docName.replace(/\.json$/i, '');
 
@@ -22,13 +27,16 @@ export function ExportMenu({ onClose }: { onClose: () => void }) {
     onClose();
   };
 
+  if (!pos) return null;
+
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
-      {/* Below md: fixed to the viewport's top-right rather than anchored to
-          the trigger — see ImportMenu.tsx for why. From md up it anchors
-          under the button like a normal dropdown. */}
-      <div className="fixed top-14 right-3 sm:right-4 md:absolute md:top-full md:right-0 md:mt-1.5 z-50 w-56 max-w-[calc(100vw-1.5rem)] md:max-w-none rounded-lg border border-border bg-surface shadow-2xl py-1.5 animate-slide-up">
+      {/* Fixed + measured from the real trigger position — see
+          ImportMenu.tsx / useAnchoredPosition.ts for why. */}
+      <div
+        style={{ top: pos.top, left: pos.left, width: MENU_WIDTH }}
+        className="fixed z-50 rounded-lg border border-border bg-surface shadow-2xl py-1.5 animate-slide-up">
         <Item
           icon={<Download size={13} />}
           label="Download JSON"
