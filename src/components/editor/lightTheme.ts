@@ -18,11 +18,19 @@ export const lightThemeData: editor.IStandaloneThemeData = {
   base: 'vs',
   inherit: true,
   rules: [
+    // Token names verified against monaco-editor's own JSON tokenizer
+    // source (languages/features/json/tokenization.js) — strings are
+    // `string.value.json` (not `string.json`, which isn't a real token),
+    // and keys are `string.key.json`, left at plain foreground here to
+    // match JetBrains' light scheme not distinguishing them. These are
+    // what the minimap actually renders from — it paints straight from
+    // the tokenizer + these rules, bypassing collectDecorations' DOM
+    // overlay that colors the visible text.
     { token: '', foreground: '1A1A1A', background: 'FFFFFF' },
-    { token: 'string.json', foreground: '008000' }, // green — string fallback
+    { token: 'string.key.json', foreground: '1A1A1A' },
+    { token: 'string.value.json', foreground: '008000' }, // green — string values
     { token: 'number.json', foreground: '0000FF' }, // blue — numbers
-    { token: 'number.float.json', foreground: '0000FF' },
-    { token: 'keyword.json', foreground: '0000FF' }, // blue — true/false/null fallback
+    { token: 'keyword.json', foreground: '0000FF' }, // blue — true/false/null
     { token: 'delimiter.bracket.json', foreground: '1A1A1A' },
     { token: 'delimiter.array.json', foreground: '1A1A1A' },
     { token: 'delimiter.colon.json', foreground: '1A1A1A' },
