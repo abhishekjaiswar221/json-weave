@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FolderOpen, Download, Share2, Settings as SettingsIcon, ChevronDown } from 'lucide-react';
+import { FolderOpen, Download, Share2, Settings as SettingsIcon, ChevronDown, Info } from 'lucide-react';
 import { LogoMark } from '../common/Logo';
 import { Button } from '../common/Button';
+import { ThemeToggle } from '../common/ThemeToggle';
 import { useUiStore } from '../../store/uiStore';
 import { useWorkspaceStore } from '../../store/workspaceStore';
 import { ImportMenu } from '../import/ImportMenu';
@@ -36,13 +37,27 @@ export function TopBar() {
 
       <div className="flex items-center gap-1 sm:gap-1.5">
         <div className="relative">
-          <Button size="sm" title={`Open JSON (${modKey}+O)`} onClick={() => setOpenImport((v) => !v)}>
+          <Button
+            size="sm"
+            title={`Open JSON (${modKey}+O)`}
+            onClick={() => {
+              setOpenExport(false);
+              setOpenImport((v) => !v);
+            }}
+          >
             <FolderOpen size={13} /> <span className="hidden sm:inline">Open</span> <ChevronDown size={11} />
           </Button>
           {openImport && <ImportMenu onClose={() => setOpenImport(false)} />}
         </div>
         <div className="relative">
-          <Button size="sm" title={`Download JSON (${modKey}+S)`} onClick={() => setOpenExport((v) => !v)}>
+          <Button
+            size="sm"
+            title={`Download JSON (${modKey}+S)`}
+            onClick={() => {
+              setOpenImport(false);
+              setOpenExport((v) => !v);
+            }}
+          >
             <Download size={13} /> <span className="hidden sm:inline">Save</span> <ChevronDown size={11} />
           </Button>
           {openExport && <ExportMenu onClose={() => setOpenExport(false)} />}
@@ -50,6 +65,14 @@ export function TopBar() {
         <Button size="sm" variant="ghost" onClick={share} title="Copy JSON to clipboard">
           <Share2 size={13} /> <span className="hidden sm:inline">Share</span>
         </Button>
+        <Link
+          to="/features"
+          title="Features & shortcuts"
+          className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-md text-xs font-medium text-text-muted hover:text-text hover:bg-surface-2 transition-colors whitespace-nowrap"
+        >
+          <Info size={13} /> <span className="hidden sm:inline">Features</span>
+        </Link>
+        <ThemeToggle />
         <Button size="icon" variant="ghost" onClick={() => openModal('settings')} title="Settings">
           <SettingsIcon size={14} />
         </Button>

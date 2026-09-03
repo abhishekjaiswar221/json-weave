@@ -30,8 +30,14 @@ export function Toolbar() {
   const disabled = value === undefined;
 
   return (
-    <div className="h-11 shrink-0 border-b border-border bg-surface px-2.5 flex items-center justify-between gap-3 overflow-x-auto">
-      <div className="flex items-center gap-1 shrink-0">
+    // Below `lg` there isn't room for both the action buttons and the view
+    // tabs on one line (the two groups together run ~760px), so they stack
+    // into two independently-scrollable rows instead of letting one of them
+    // scroll off-screen with no indication it's there — the view tabs in
+    // particular are the only way to switch views, and used to disappear
+    // completely on phones and get clipped on tablets.
+    <div className="shrink-0 border-b border-border bg-surface flex flex-col lg:flex-row lg:h-11 lg:items-center lg:justify-between lg:gap-3">
+      <div className="h-11 px-2.5 flex items-center gap-1 overflow-x-auto no-scrollbar shrink-0">
         <Button
           size="sm"
           variant="ghost"
@@ -91,13 +97,17 @@ export function Toolbar() {
         </Button>
       </div>
 
-      <div className="flex items-center gap-0.5 rounded-md border border-border bg-surface-2 p-0.5 shrink-0">
+      {/* Full-width, evenly-distributed segmented control below md (a
+          content-sized pill reads as small/off-center on a phone-width
+          row); back to its natural compact size — today's default look —
+          from md up. */}
+      <div className="flex items-center gap-0.5 rounded-md border border-border bg-surface-2 p-0.5 mx-2.5 mb-2 w-auto md:w-max lg:ml-0 lg:mr-2.5 lg:mb-0 overflow-x-auto no-scrollbar shrink-0">
         {VIEW_TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setViewMode(t.id)}
             className={clsx(
-              'px-2.5 h-6 rounded text-[12px] font-medium transition-colors whitespace-nowrap',
+              'flex-1 md:flex-none px-2.5 h-6 rounded text-[12px] font-medium text-center transition-colors whitespace-nowrap',
               viewMode === t.id ? 'bg-surface text-text shadow-sm' : 'text-text-faint hover:text-text-muted'
             )}
           >

@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { TopBar } from '../components/layout/TopBar';
 import { Toolbar } from '../components/layout/Toolbar';
 import { StatusBar } from '../components/layout/StatusBar';
+import { ResizeHandle } from '../components/layout/ResizeHandle';
 import { JsonEditor } from '../components/editor/JsonEditor';
 import { InspectorPanel } from '../components/inspector/InspectorPanel';
 import { TreeView } from '../components/tree/TreeView';
@@ -21,6 +22,8 @@ import { ToastContainer } from '../components/common/ToastContainer';
 import { useWorkspaceStore } from '../store/workspaceStore';
 import { useUiStore } from '../store/uiStore';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
+import { useLoadDocument } from '../hooks/useLoadDocument';
 import { setOpenFileTrigger } from '../lib/openFileBridge';
 
 function SidePanelContent({ viewMode }: { viewMode: 'code' | 'tree' | 'overview' }) {
@@ -43,13 +46,15 @@ function SidePanelContent({ viewMode }: { viewMode: 'code' | 'tree' | 'overview'
 export default function Workspace() {
   const hasDocument = useWorkspaceStore((s) => s.hasDocument);
   const viewMode = useWorkspaceStore((s) => s.viewMode);
-  const loadDocument = useWorkspaceStore((s) => s.loadDocument);
-  const pushToast = useUiStore((s) => s.pushToast);
+  const docName = useWorkspaceStore((s) => s.docName);
+  const loadDocument = useLoadDocument();
+  const sidePanelWidth = useUiStore((s) => s.sidePanelWidth);
   const mobileInspectorOpen = useUiStore((s) => s.mobileInspectorOpen);
   const setMobileInspectorOpen = useUiStore((s) => s.setMobileInspectorOpen);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useKeyboardShortcuts();
+  useDocumentMeta(hasDocument ? `${docName} — JSONWeave` : 'JSONWeave — Understand your JSON, instantly', undefined, '/');
 
   useEffect(() => {
     setOpenFileTrigger(() => fileInputRef.current?.click());
@@ -62,14 +67,11 @@ export default function Workspace() {
       const inEditor = active?.closest('.monaco-editor') || active?.tagName === 'TEXTAREA' || active?.tagName === 'INPUT';
       if (inEditor || hasDocument) return;
       const text = e.clipboardData?.getData('text/plain');
-      if (text) {
-        loadDocument('pasted.json', text);
-        pushToast('success', 'Pasted from clipboard');
-      }
+      if (text) loadDocument('pasted.json', text, 'Pasted from clipboard');
     };
     window.addEventListener('paste', onPaste);
     return () => window.removeEventListener('paste', onPaste);
-  }, [hasDocument, loadDocument, pushToast]);
+  }, [hasDocument, loadDocument]);
 
   // close the mobile bottom sheet automatically when leaving a panel-backed view
   useEffect(() => {
@@ -79,17 +81,18 @@ export default function Workspace() {
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    file.text().then((text) => {
-      loadDocument(file.name, text);
-      pushToast('success', `Loaded ${file.name}`);
-    });
+    file.text().then((text) => loadDocument(file.name, text, `Loaded ${file.name}`));
     e.target.value = '';
   };
 
   const isPanelView = viewMode === 'code' || viewMode === 'tree' || viewMode === 'overview';
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-canvas overflow-hidden">
+    // 100dvh, not 100vh — on mobile browsers 100vh includes the space behind
+    // the address bar/toolbar chrome, which isn't actually visible, so the
+    // last few pixels of content (e.g. the empty-state's dashed border) were
+    // getting cut off there. dvh tracks the real visible viewport instead.
+    <div className="h-dvh w-screen flex flex-col bg-canvas overflow-hidden">
       <input ref={fileInputRef} type="file" accept=".json,application/json" className="hidden" onChange={onFileChange} />
       <TopBar />
       <Toolbar />
@@ -103,12 +106,13 @@ export default function Workspace() {
           <DiffView />
         ) : (
           <div className="h-full flex">
-            <div className="flex-1 min-w-0 md:border-r border-border">
+            <div className="flex-1 min-w-0">
               <JsonEditor />
             </div>
 
-            {/* Desktop: persistent side column. Mobile: bottom sheet, opened via the FAB. */}
-            <div className="hidden md:flex md:w-95 md:shrink-0 md:flex-col">
+            {/* Desktop: persistent, resizable side column. Mobile: bottom sheet, opened via the FAB. */}
+            <ResizeHandle />
+            <div className="hidden md:flex md:shrink-0 md:flex-col" style={{ width: sidePanelWidth }}>
               <SidePanelContent viewMode={viewMode} />
             </div>
 

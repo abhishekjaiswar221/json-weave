@@ -5,8 +5,8 @@
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
 
   /* SaaS UI palette — a neutral warm-grey dark base (Notion-style, no blue
-     tint) with a single vivid green accent (Neon-style). The editor's syntax
-     colors are derived from this same palette — see draculaTheme.ts. */
+     tint) with a single vivid green accent (Neon-style). The editor's own
+     background stays this same canvas color — see darkTheme.ts. */
   --color-canvas: #141414;
   --color-surface: #1b1b1b;
   --color-surface-2: #212121;
@@ -33,6 +33,7 @@
   --animate-fade-in: fade-in 180ms ease-out;
   --animate-scale-in: scale-in 150ms ease-out;
   --animate-slide-up: slide-up 200ms ease-out;
+  --animate-toast-in: toast-in 200ms ease-out;
 }
 
 @keyframes fade-in {
@@ -45,6 +46,10 @@
 }
 @keyframes slide-up {
   from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(-6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -130,34 +135,82 @@ body {
   font-feature-settings: "liga" 1, "calt" 1;
 }
 
-/* Editor surface tokens — scoped, never applied to app chrome. The background
-   is the app's own dark canvas token, but the text itself uses the classic
-   Dracula palette (cyan/green/purple/orange/pink). Swaps to a light variant
-   (see JsonEditor.tsx / lightTheme.ts) when the app theme resolves to light,
-   via the .light modifier applied on this element. */
-.editor-dracula {
-  --dracula-bg: #141414;
-  --dracula-fg: #f8f8f2;
-  --dracula-comment: #6272a4;
-  --dracula-cyan: #8be9fd;
-  --dracula-green: #50fa7b;
-  --dracula-orange: #ffb86c;
-  --dracula-pink: #ff79c6;
-  --dracula-purple: #bd93f9;
-  --dracula-yellow: #f1fa8c;
-  background: var(--dracula-bg);
+/* For horizontally-scrollable strips (the toolbar's action-button row on
+   narrow screens, the mobile view-tab row) where the persistent thin
+   scrollbar reads as a stray line sitting against whatever's below it,
+   rather than a useful affordance — touch/wheel scrolling still works. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
-.editor-dracula.light {
-  --dracula-bg: #ffffff;
-  --dracula-fg: #24252b;
-  --dracula-comment: #475569;
-  --dracula-cyan: #0369a1;
-  --dracula-green: #047857;
-  --dracula-orange: #92400e;
-  --dracula-pink: #be123c;
-  --dracula-purple: #6d28d9;
-  --dracula-yellow: #854d0e;
+/* Editor surface tokens — scoped, never applied to app chrome. The
+   background is the app's own canvas token; the text uses JSON syntax
+   colors modeled on JetBrains' own default color schemes (Darcula for
+   dark, the default light scheme for light) rather than an invented
+   palette. Swaps to the light set (see JsonEditor.tsx / lightTheme.ts)
+   when the app theme resolves to light, via the .light modifier applied
+   on this element. */
+.editor-json {
+  --json-bg: #141414;
+  --json-fg: #a9b7c6;
+  --json-comment: #808080;
+  --json-key: #cc7ab0;
+  --json-string: #6a8759;
+  --json-number: #6897bb;
+  --json-keyword: #cc7832;
+  --json-brace: #ffc66d;
+  background: var(--json-bg);
+}
+
+.editor-json.light {
+  --json-bg: #ffffff;
+  --json-fg: #1a1a1a;
+  --json-comment: #808080;
+  --json-key: #1a1a1a;
+  --json-string: #008000;
+  --json-number: #0000ff;
+  --json-keyword: #0000ff;
+  --json-brace: #1a1a1a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Light/dark theme switch — a circular reveal expanding from the toggle
+   button, via the View Transitions API (ThemeToggle.tsx sets the origin as
+   --theme-toggle-x/y before triggering it). Disabled outright under
+   reduced-motion (belt-and-braces alongside ThemeToggle skipping the API
+   entirely in that case). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) { z-index: 1; }
+::view-transition-new(root) {
+  z-index: 2;
+  clip-path: circle(0% at var(--theme-toggle-x, 50%) var(--theme-toggle-y, 50%));
+  animation: theme-reveal 480ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+@keyframes theme-reveal {
+  to { clip-path: circle(150% at var(--theme-toggle-x, 50%) var(--theme-toggle-y, 50%)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+    clip-path: none !important;
+  }
 }
 
 @keyframes pulse-ring {
@@ -170,15 +223,19 @@ body {
 
 /* Precise per-role JSON coloring, computed from JSONWeave's own tolerant AST
    and applied as Monaco decorations (see JsonEditor.tsx). !important because
-   these sit alongside Monaco's own token classes on the same span. */
-.jt-key { color: #8be9fd !important; }
-.jt-string { color: #50fa7b !important; }
-.jt-number { color: #bd93f9 !important; }
-.jt-boolean { color: #ffb86c !important; }
-.jt-null { color: #ff79c6 !important; }
+   these sit alongside Monaco's own token classes on the same span.
+   Dark = JetBrains Darcula's JSON colors: keys rose, strings green,
+   numbers blue, true/false/null orange. Light = JetBrains' default light
+   scheme: only string/keyword literals get a color (green/blue) — keys
+   stay plain foreground there, matching how that scheme actually renders. */
+.jt-key { color: #cc7ab0 !important; }
+.jt-string { color: #6a8759 !important; }
+.jt-number { color: #6897bb !important; }
+.jt-boolean { color: #cc7832 !important; }
+.jt-null { color: #cc7832 !important; }
 
-.editor-dracula.light .jt-key { color: #047857 !important; }
-.editor-dracula.light .jt-string { color: #0369a1 !important; }
-.editor-dracula.light .jt-number { color: #6d28d9 !important; }
-.editor-dracula.light .jt-boolean { color: #92400e !important; }
-.editor-dracula.light .jt-null { color: #be123c !important; }
+.editor-json.light .jt-key { color: #1a1a1a !important; }
+.editor-json.light .jt-string { color: #008000 !important; }
+.editor-json.light .jt-number { color: #0000ff !important; }
+.editor-json.light .jt-boolean { color: #0000ff !important; }
+.editor-json.light .jt-null { color: #0000ff !important; }

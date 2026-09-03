@@ -3,6 +3,7 @@ import { Search, CornerDownLeft } from 'lucide-react';
 import clsx from 'clsx';
 import { useUiStore } from '../../store/uiStore';
 import { useCommands } from '../../hooks/useCommands';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 
 export function CommandPalette() {
   const open = useUiStore((s) => s.commandPaletteOpen);
@@ -11,6 +12,8 @@ export function CommandPalette() {
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(open, dialogRef);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -49,13 +52,20 @@ export function CommandPalette() {
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-start justify-center pt-[16vh] px-4 animate-fade-in">
+    <div className="fixed inset-0 z-60 flex items-start justify-center pt-[16vh] px-4 animate-fade-in">
       <div className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
-      <div className="relative w-full max-w-lg rounded-lg border border-border bg-surface shadow-2xl overflow-hidden animate-scale-in">
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Command palette"
+        className="relative w-full max-w-lg rounded-lg border border-border bg-surface shadow-2xl overflow-hidden animate-scale-in"
+      >
         <div className="flex items-center gap-2.5 px-4 py-3 border-b border-border">
           <Search size={15} className="text-text-faint shrink-0" />
           <input
             ref={inputRef}
+            aria-label="Search commands"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => {
@@ -73,14 +83,21 @@ export function CommandPalette() {
               }
             }}
             placeholder="Search commands…"
+            role="combobox"
+            aria-expanded={filtered.length > 0}
+            aria-controls="command-palette-list"
+            aria-activedescendant={filtered[activeIndex] ? `command-${filtered[activeIndex].id}` : undefined}
             className="flex-1 bg-transparent text-[14px] text-text placeholder:text-text-faint outline-none"
           />
         </div>
-        <div className="max-h-80 overflow-auto py-1.5">
+        <div id="command-palette-list" role="listbox" className="max-h-80 overflow-auto py-1.5">
           {filtered.length === 0 && <div className="px-4 py-6 text-center text-[12.5px] text-text-faint">No matching commands</div>}
           {filtered.map((cmd, i) => (
             <button
               key={cmd.id}
+              id={`command-${cmd.id}`}
+              role="option"
+              aria-selected={i === activeIndex}
               onMouseEnter={() => setActiveIndex(i)}
               onClick={() => run(i)}
               className={clsx(

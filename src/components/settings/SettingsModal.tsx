@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import { ShieldCheck } from 'lucide-react';
 import { Modal } from '../common/Modal';
 import { useUiStore } from '../../store/uiStore';
-import type { AppTheme } from '../../lib/storage/storage';
+import { FONT_SIZE, clampFontSize, type AppTheme } from '../../lib/storage/storage';
+import { modKey } from '../../lib/platform';
 
 type Tab = 'editor' | 'formatting' | 'appearance' | 'privacy';
 const TABS: { id: Tab; label: string }[] = [
@@ -52,14 +53,14 @@ export function SettingsModal() {
 
   return (
     <Modal open onClose={closeModal} title="Settings" width="max-w-xl">
-      <div className="flex gap-5">
-        <div className="w-32 shrink-0 flex flex-col gap-0.5">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-5">
+        <div className="flex gap-0.5 overflow-x-auto no-scrollbar border-b border-border pb-2 sm:w-32 sm:shrink-0 sm:flex-col sm:border-b-0 sm:pb-0">
           {TABS.map((t) => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
               className={clsx(
-                'text-left text-[12.5px] px-2.5 py-1.5 rounded-md',
+                'shrink-0 whitespace-nowrap text-left text-[12.5px] px-2.5 py-1.5 rounded-md',
                 tab === t.id ? 'bg-accent-muted text-accent' : 'text-text-muted hover:bg-surface-2'
               )}
             >
@@ -72,15 +73,26 @@ export function SettingsModal() {
           {tab === 'editor' && (
             <>
               <FieldRow label="Font size">
-                <select
-                  className={selectClass}
+                <input
+                  type="number"
+                  min={FONT_SIZE.min}
+                  max={FONT_SIZE.max}
                   value={settings.editor.fontSize}
-                  onChange={(e) => updateSettings({ editor: { ...settings.editor, fontSize: Number(e.target.value) } })}
-                >
-                  {[12, 13, 14, 15, 16, 18].map((s) => (
-                    <option key={s} value={s}>{s}px</option>
-                  ))}
-                </select>
+                  onChange={(e) => {
+                    const n = Number(e.target.value);
+                    if (Number.isFinite(n)) updateSettings({ editor: { ...settings.editor, fontSize: n } });
+                  }}
+                  onBlur={(e) =>
+                    updateSettings({ editor: { ...settings.editor, fontSize: clampFontSize(Number(e.target.value) || FONT_SIZE.default) } })
+                  }
+                  className={clsx(selectClass, 'w-16 text-right')}
+                />
+              </FieldRow>
+              <FieldRow label={`Zoom with ${modKey} + Scroll`}>
+                <Toggle
+                  checked={settings.editor.mouseWheelZoom}
+                  onChange={(v) => updateSettings({ editor: { ...settings.editor, mouseWheelZoom: v } })}
+                />
               </FieldRow>
               <FieldRow label="Tab size">
                 <select

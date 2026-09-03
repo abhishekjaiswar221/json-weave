@@ -40,7 +40,7 @@ export function DiffView() {
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-px bg-border h-[38%] shrink-0">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border h-[46%] sm:h-[38%] shrink-0">
         <div className="bg-surface flex flex-col min-h-0">
           <div className="px-3 py-1.5 text-[11px] text-text-faint border-b border-border shrink-0">Original (current document)</div>
           <pre className="mono text-[11.5px] text-text-muted p-3 overflow-auto flex-1 whitespace-pre-wrap break-all">{source || 'Nothing loaded'}</pre>

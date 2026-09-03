@@ -1,20 +1,19 @@
 import { Upload, ClipboardPaste, Link2, FileCode } from 'lucide-react';
 import { useUiStore } from '../../store/uiStore';
-import { useWorkspaceStore } from '../../store/workspaceStore';
+import { useLoadDocument } from '../../hooks/useLoadDocument';
 import { triggerOpenFile } from '../../lib/openFileBridge';
 import { EXAMPLES } from '../../lib/examples';
 
 export function ImportMenu({ onClose }: { onClose: () => void }) {
   const openModal = useUiStore((s) => s.openModal);
   const pushToast = useUiStore((s) => s.pushToast);
-  const loadDocument = useWorkspaceStore((s) => s.loadDocument);
+  const loadDocument = useLoadDocument();
 
   const pasteFromClipboard = async () => {
     try {
       const text = await navigator.clipboard.readText();
       if (!text) return pushToast('error', 'Clipboard is empty');
-      loadDocument('pasted.json', text);
-      pushToast('success', 'Pasted from clipboard');
+      loadDocument('pasted.json', text, 'Pasted from clipboard');
     } catch {
       pushToast('error', 'Could not read clipboard — try Ctrl/Cmd+V on the page instead');
     }
@@ -24,7 +23,11 @@ export function ImportMenu({ onClose }: { onClose: () => void }) {
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
-      <div className="absolute right-0 top-full mt-1.5 w-56 z-50 rounded-lg border border-border bg-surface shadow-2xl py-1.5 animate-slide-up">
+      {/* Fixed to the viewport's top-right rather than anchored to the trigger
+          button — anchoring to the trigger meant this could clip off the left
+          edge on narrow screens depending on exactly where "Open" landed in
+          the top bar. This way it's always fully on-screen. */}
+      <div className="fixed top-14 right-3 sm:right-4 z-50 w-56 max-w-[calc(100vw-1.5rem)] rounded-lg border border-border bg-surface shadow-2xl py-1.5 animate-slide-up">
         <MenuItem icon={<Upload size={13} />} label="Upload file" onClick={() => { triggerOpenFile(); onClose(); }} />
         <MenuItem icon={<ClipboardPaste size={13} />} label="Paste JSON" onClick={pasteFromClipboard} />
         <MenuItem icon={<Link2 size={13} />} label="Open from URL" onClick={() => { openModal('openUrl'); onClose(); }} />
@@ -36,8 +39,7 @@ export function ImportMenu({ onClose }: { onClose: () => void }) {
             icon={<FileCode size={13} />}
             label={ex.name}
             onClick={() => {
-              loadDocument(ex.name, ex.content);
-              pushToast('success', `Loaded ${ex.name}`);
+              loadDocument(ex.name, ex.content, `Loaded ${ex.name}`);
               onClose();
             }}
           />

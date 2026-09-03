@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { loadSettings, saveSettings, type AppSettings } from '../lib/storage/storage';
+import { loadSettings, saveSettings, loadSidePanelWidth, saveSidePanelWidth, type AppSettings } from '../lib/storage/storage';
 
 export type ModalKind = 'settings' | 'repair' | 'openUrl' | 'import' | 'export' | 'diff-setup' | null;
 
@@ -7,6 +7,7 @@ export interface Toast {
   id: string;
   kind: 'success' | 'warning' | 'error' | 'info';
   message: string;
+  action?: { label: string; onClick: () => void };
 }
 
 interface UiState {
@@ -17,16 +18,18 @@ interface UiState {
   toasts: Toast[];
   settings: AppSettings;
   mobileInspectorOpen: boolean;
+  sidePanelWidth: number;
 
   setCommandPaletteOpen: (open: boolean) => void;
   openModal: (modal: ModalKind) => void;
   closeModal: () => void;
   setSearchOpen: (open: boolean) => void;
   setDiagnosticsOpen: (open: boolean) => void;
-  pushToast: (kind: Toast['kind'], message: string) => void;
+  pushToast: (kind: Toast['kind'], message: string, action?: Toast['action']) => void;
   dismissToast: (id: string) => void;
   updateSettings: (patch: Partial<AppSettings>) => void;
   setMobileInspectorOpen: (open: boolean) => void;
+  setSidePanelWidth: (px: number) => void;
 }
 
 export const useUiStore = create<UiState>((set, get) => ({
@@ -37,6 +40,7 @@ export const useUiStore = create<UiState>((set, get) => ({
   toasts: [],
   settings: loadSettings(),
   mobileInspectorOpen: false,
+  sidePanelWidth: loadSidePanelWidth(),
 
   setCommandPaletteOpen: (open) => set({ commandPaletteOpen: open }),
   openModal: (modal) => set({ activeModal: modal }),
@@ -44,10 +48,13 @@ export const useUiStore = create<UiState>((set, get) => ({
   setSearchOpen: (open) => set({ searchOpen: open }),
   setDiagnosticsOpen: (open) => set({ diagnosticsOpen: open }),
 
-  pushToast: (kind, message) => {
+  pushToast: (kind, message, action) => {
     const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-    set({ toasts: [...get().toasts, { id, kind, message }] });
-    setTimeout(() => get().dismissToast(id), 3200);
+    set({ toasts: [...get().toasts, { id, kind, message, action }] });
+    // Toasts carrying an action (e.g. "Review" on a broken-JSON warning) get
+    // longer on screen — there's something to read and decide on, not just
+    // acknowledge.
+    setTimeout(() => get().dismissToast(id), action ? 6000 : 3200);
   },
   dismissToast: (id) => set({ toasts: get().toasts.filter((t) => t.id !== id) }),
 
@@ -62,4 +69,9 @@ export const useUiStore = create<UiState>((set, get) => ({
     set({ settings: next });
   },
   setMobileInspectorOpen: (open) => set({ mobileInspectorOpen: open }),
+
+  setSidePanelWidth: (px) => {
+    set({ sidePanelWidth: px });
+    saveSidePanelWidth(px);
+  },
 }));
