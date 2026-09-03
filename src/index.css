@@ -132,6 +132,20 @@ body {
   background: color-mix(in srgb, var(--color-accent) 35%, transparent);
 }
 
+/* Unlike <a href>, <button> gets no pointer cursor from any browser's UA
+   stylesheet by default — every button in the app was showing the plain
+   arrow on hover. One rule instead of a cursor-pointer class on every
+   button/link everywhere; [role="treeitem"] covers TreeNode's rows, the
+   one clickable element here that isn't a real <button> or <a>. Excludes
+   :disabled (already pointer-events:none via Button.tsx anyway) and
+   anything that sets its own cursor, like ResizeHandle's col-resize drag
+   handle or the diff view's resizable textarea. */
+button:not(:disabled),
+a[href],
+[role="treeitem"] {
+  cursor: pointer;
+}
+
 /* thin, quiet scrollbars everywhere */
 * {
   scrollbar-width: thin;
