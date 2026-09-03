@@ -8,21 +8,32 @@ import type { editor } from 'monaco-editor';
  * accent color. Background/gutter/selection/cursor stay the app's own dark
  * tokens (see the @theme block in index.css) rather than the JetBrains
  * editor canvas, so the surrounding chrome and the editor read as one piece.
+ *
+ * For normal documents the visible text is actually colored by
+ * JSONWeave's own AST-based decorations (JsonEditor's
+ * `collectDecorations`), not these token rules directly — but the rules
+ * still have to be right, since the minimap bypasses those decorations
+ * entirely and paints straight from tokenizer + rules.
  */
 export const darkThemeData: editor.IStandaloneThemeData = {
   base: 'vs-dark',
   inherit: true,
   rules: [
-    // These are the fallback colors used by Monaco's stock JSON grammar (which
-    // cannot itself distinguish an object key from a string value). For normal
-    // documents JSONWeave overlays precise per-role decorations computed from
-    // its own tolerant AST — see JsonEditor's `collectDecorations` — so keys,
-    // strings, numbers, booleans and null are always colored distinctly there.
+    // These aren't just a "typing" fallback for odd cases — they're what the
+    // minimap actually renders from (it paints straight from the tokenizer +
+    // these rules, never from the DOM decorations `collectDecorations`
+    // applies to the visible text), so getting the real token names right
+    // matters even though the main view always looks correct regardless.
+    // Verified against monaco-editor's own JSON tokenizer source
+    // (languages/features/json/tokenization.js) rather than guessed —
+    // notably strings are `string.value.json`, not `string.json` (that
+    // token doesn't exist), and keys are their own `string.key.json`,
+    // distinct from string values.
     { token: '', foreground: 'A9B7C6', background: '141414' },
-    { token: 'string.json', foreground: '6A8759' }, // green — string fallback
+    { token: 'string.key.json', foreground: 'CC7AB0' }, // rose — object keys
+    { token: 'string.value.json', foreground: '6A8759' }, // green — string values
     { token: 'number.json', foreground: '6897BB' }, // blue — numbers
-    { token: 'number.float.json', foreground: '6897BB' },
-    { token: 'keyword.json', foreground: 'CC7832' }, // orange — true/false/null fallback
+    { token: 'keyword.json', foreground: 'CC7832' }, // orange — true/false/null
     { token: 'delimiter.bracket.json', foreground: 'FFC66D' }, // gold — braces
     { token: 'delimiter.array.json', foreground: 'A9B7C6' },
     { token: 'delimiter.colon.json', foreground: 'A9B7C6' },

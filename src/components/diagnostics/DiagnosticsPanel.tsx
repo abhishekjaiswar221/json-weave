@@ -58,7 +58,7 @@ export function DiagnosticsPanel() {
               setOpen(false);
               openRepair('repair');
             }}
-            className="w-full text-center text-[12px] font-medium text-accent hover:text-accent-hover"
+            className="w-full text-center text-[12px] font-medium text-accent-text hover:text-accent-hover"
           >
             Open Repair Mode →
           </button>

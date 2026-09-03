@@ -110,8 +110,8 @@ export function ResizeHandle() {
         className={clsx(
           'relative z-10 flex h-9 w-4 items-center justify-center rounded-full border transition-colors',
           isDragging
-            ? 'border-accent/50 bg-accent-muted text-accent'
-            : 'border-border bg-surface text-text-faint group-hover:border-accent/40 group-hover:text-accent group-focus-visible:border-accent/40 group-focus-visible:text-accent'
+            ? 'border-accent/50 bg-accent-muted text-accent-text'
+            : 'border-border bg-surface text-text-faint group-hover:border-accent/40 group-hover:text-accent-text group-focus-visible:border-accent/40 group-focus-visible:text-accent-text'
         )}
       >
         <GripVertical size={12} />

@@ -12,7 +12,7 @@ export function SmartValuePreview({ value }: { value: string }) {
         href={value}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-1 inline-flex items-center gap-1 text-[12px] text-accent hover:text-accent-hover"
+        className="mt-1 inline-flex items-center gap-1 text-[12px] text-accent-text hover:text-accent-hover"
       >
         Open link <ExternalLink size={11} />
       </a>
@@ -21,7 +21,7 @@ export function SmartValuePreview({ value }: { value: string }) {
 
   if (kind === 'email') {
     return (
-      <a href={`mailto:${value}`} className="mt-1 inline-flex items-center gap-1 text-[12px] text-accent hover:text-accent-hover">
+      <a href={`mailto:${value}`} className="mt-1 inline-flex items-center gap-1 text-[12px] text-accent-text hover:text-accent-hover">
         Email address
       </a>
     );
@@ -48,7 +48,7 @@ export function SmartValuePreview({ value }: { value: string }) {
       <div className="mt-1">
         <button
           onClick={() => setJwtOpen((o) => !o)}
-          className="inline-flex items-center gap-1 text-[12px] text-accent hover:text-accent-hover"
+          className="inline-flex items-center gap-1 text-[12px] text-accent-text hover:text-accent-hover"
         >
           <KeyRound size={11} /> {jwtOpen ? 'Hide decoded JWT' : 'Decode JWT'}
         </button>

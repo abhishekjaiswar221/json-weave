@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import {
   FolderOpen, ClipboardPaste, FileCode, ArrowRight, WandSparkles, Wrench, ListTree,
-  SearchCode, Eye, GitCompare, ShieldCheck, Command, Link2,
+  SearchCode, Eye, GitCompare, ShieldCheck, Command, Link2, Globe,
 } from 'lucide-react';
 import { Logo, LogoMark } from '../components/common/Logo';
 import { Button } from '../components/common/Button';
@@ -15,6 +15,30 @@ import { EXAMPLES } from '../lib/examples';
 import { modKey } from '../lib/platform';
 import { OpenUrlModal } from '../components/import/OpenUrlModal';
 import { ToastContainer } from '../components/common/ToastContainer';
+
+// lucide-react ships no brand/logo icons (checked: no Twitter, no Linkedin
+// export), so both are small inline SVGs of their actual marks instead.
+function TwitterIcon({ size = 14 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M23.954 4.569c-.885.389-1.83.654-2.825.775 1.014-.611 1.794-1.574 2.163-2.723-.951.555-2.005.959-3.127 1.184-.897-.959-2.178-1.559-3.594-1.559-2.717 0-4.92 2.203-4.92 4.917 0 .39.045.765.127 1.124C7.691 8.094 4.066 6.13 1.64 3.161c-.427.722-.666 1.561-.666 2.475 0 1.71.87 3.213 2.188 4.096-.807-.026-1.566-.248-2.229-.616v.061c0 2.385 1.693 4.374 3.946 4.827-.413.111-.849.171-1.296.171-.314 0-.615-.03-.916-.086.631 1.953 2.445 3.377 4.604 3.417-1.68 1.319-3.809 2.105-6.102 2.105-.39 0-.779-.023-1.17-.067 2.189 1.394 4.768 2.209 7.557 2.209 9.054 0 13.999-7.496 13.999-13.986 0-.209 0-.42-.015-.63.961-.689 1.8-1.56 2.46-2.548l-.047-.02z" />
+    </svg>
+  );
+}
+
+function LinkedInIcon({ size = 14 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+    </svg>
+  );
+}
+
+const SOCIAL_LINKS = [
+  { href: 'https://abhishekjaiswar.pages.dev', label: 'Portfolio', icon: Globe },
+  { href: 'https://x.com/abhishekwrights', label: 'Twitter', icon: TwitterIcon },
+  { href: 'https://www.linkedin.com/in/jaiswar-abhishek/', label: 'LinkedIn', icon: LinkedInIcon },
+];
 
 const FEATURES = [
   { icon: WandSparkles, title: 'Smart formatting', desc: 'Beautify, minify or sort keys with configurable indentation — instant, in-browser.' },
@@ -86,7 +110,7 @@ export default function Features() {
       {isDragging && (
         <div className="fixed inset-0 z-50 bg-canvas/90 backdrop-blur-sm flex items-center justify-center">
           <div className="border-2 border-dashed border-accent rounded-xl px-16 py-14 drop-active">
-            <p className="text-[15px] text-accent font-medium">Drop your JSON file to open it</p>
+            <p className="text-[15px] text-accent-text font-medium">Drop your JSON file to open it</p>
           </div>
         </div>
       )}
@@ -179,7 +203,7 @@ export default function Features() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border rounded-xl overflow-hidden border border-border">
           {FEATURES.map((f) => (
             <div key={f.title} className="bg-surface p-5">
-              <f.icon size={16} className="text-accent mb-3" />
+              <f.icon size={16} className="text-accent-text mb-3" />
               <h3 className="text-[13px] font-medium text-text">{f.title}</h3>
               <p className="mt-1.5 text-[12px] text-text-muted leading-relaxed">{f.desc}</p>
             </div>
@@ -256,12 +280,26 @@ export default function Features() {
       </section>
 
       <footer className="border-t border-border">
-        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2 text-text-faint">
             <LogoMark size={16} />
             <span className="text-[12px]">JSONWeave</span>
           </div>
-          <span className="text-[11.5px] text-text-faint">Local-first JSON workspace</span>
+          <div className="flex items-center gap-3">
+            {SOCIAL_LINKS.map(({ href, label, icon: Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={label}
+                aria-label={label}
+                className="text-text-faint hover:text-accent-text transition-colors"
+              >
+                <Icon size={14} />
+              </a>
+            ))}
+          </div>
         </div>
       </footer>
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FolderOpen, Download, Share2, Settings as SettingsIcon, ChevronDown, Info } from 'lucide-react';
 import { LogoMark } from '../common/Logo';
@@ -17,6 +17,8 @@ export function TopBar() {
   const source = useWorkspaceStore((s) => s.source);
   const [openImport, setOpenImport] = useState(false);
   const [openExport, setOpenExport] = useState(false);
+  const openBtnRef = useRef<HTMLButtonElement>(null);
+  const saveBtnRef = useRef<HTMLButtonElement>(null);
 
   const share = async () => {
     if (!source) return pushToast('error', 'Nothing to share yet');
@@ -38,6 +40,7 @@ export function TopBar() {
       <div className="flex items-center gap-1 sm:gap-1.5">
         <div className="relative">
           <Button
+            ref={openBtnRef}
             size="sm"
             title={`Open JSON (${modKey}+O)`}
             onClick={() => {
@@ -47,10 +50,11 @@ export function TopBar() {
           >
             <FolderOpen size={13} /> <span className="hidden sm:inline">Open</span> <ChevronDown size={11} />
           </Button>
-          {openImport && <ImportMenu onClose={() => setOpenImport(false)} />}
+          {openImport && <ImportMenu anchorRef={openBtnRef} onClose={() => setOpenImport(false)} />}
         </div>
         <div className="relative">
           <Button
+            ref={saveBtnRef}
             size="sm"
             title={`Download JSON (${modKey}+S)`}
             onClick={() => {
@@ -60,7 +64,7 @@ export function TopBar() {
           >
             <Download size={13} /> <span className="hidden sm:inline">Save</span> <ChevronDown size={11} />
           </Button>
-          {openExport && <ExportMenu onClose={() => setOpenExport(false)} />}
+          {openExport && <ExportMenu anchorRef={saveBtnRef} onClose={() => setOpenExport(false)} />}
         </div>
         <Button size="sm" variant="ghost" onClick={share} title="Copy JSON to clipboard">
           <Share2 size={13} /> <span className="hidden sm:inline">Share</span>

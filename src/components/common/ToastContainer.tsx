@@ -38,7 +38,7 @@ export function ToastContainer() {
                 t.action!.onClick();
                 dismiss(t.id);
               }}
-              className="shrink-0 text-[12px] font-medium text-accent hover:text-accent-hover"
+              className="shrink-0 text-[12px] font-medium text-accent-text hover:text-accent-hover"
             >
               {t.action.label}
             </button>

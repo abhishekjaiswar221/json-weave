@@ -106,11 +106,11 @@ export function CommandPalette() {
               )}
             >
               <span className="flex items-center gap-2 min-w-0">
-                <span className={clsx('text-[13px] truncate', i === activeIndex ? 'text-accent' : 'text-text')}>{cmd.label}</span>
+                <span className={clsx('text-[13px] truncate', i === activeIndex ? 'text-accent-text' : 'text-text')}>{cmd.label}</span>
               </span>
               <span className="flex items-center gap-2 shrink-0">
                 {cmd.shortcut && <span className="text-[10.5px] mono text-text-faint">{cmd.shortcut}</span>}
-                {i === activeIndex && <CornerDownLeft size={12} className="text-accent" />}
+                {i === activeIndex && <CornerDownLeft size={12} className="text-accent-text" />}
               </span>
             </button>
           ))}

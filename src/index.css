@@ -24,6 +24,14 @@
   /* Ink color for text/icons sitting on a solid accent background — the
      accent itself is too light/mid-toned for white text to clear 4.5:1. */
   --color-accent-ink: #0b0c0c;
+  /* For the accent used as *text* on the app's own canvas/surface, not as a
+     button background — e.g. an active tab, a "Load file" link, the
+     selected theme option. Same problem as accent-ink in reverse: #5fbe93
+     is light enough to read fine as text on near-black (dark mode), but on
+     white it's ~2.3:1, well under the 4.5:1 minimum. Redefined darker for
+     light mode below; dark mode keeps the vivid accent since it already
+     has good contrast there. */
+  --color-accent-text: var(--color-accent);
 
   --color-success: #4fd68c;
   --color-warning: #f0b64c;
@@ -75,6 +83,14 @@
   --color-accent: #5fbe93;
   --color-accent-hover: #4aa378;
   --color-accent-muted: #5fbe931a;
+  --color-accent-text: #1f7a52;
+  /* Darker than the dark-mode values on purpose — those are pastel shades
+     tuned for a near-black background (e.g. success #4fd68c), which read as
+     washed-out, low-contrast text on white ("Valid JSON" and friends). */
+  --color-success: #15803d;
+  --color-warning: #b45309;
+  --color-danger: #dc2626;
+  --color-info: #0e7490;
 }
 
 @media (prefers-color-scheme: light) {
@@ -92,6 +108,11 @@
     --color-accent: #5fbe93;
     --color-accent-hover: #4aa378;
     --color-accent-muted: #5fbe931a;
+    --color-accent-text: #1f7a52;
+    --color-success: #15803d;
+    --color-warning: #b45309;
+    --color-danger: #dc2626;
+    --color-info: #0e7490;
   }
 }
 
