@@ -4,7 +4,6 @@ import Editor, { type OnMount } from '@monaco-editor/react';
 import type * as Monaco from 'monaco-editor';
 import { useWorkspaceStore } from '../../store/workspaceStore';
 import { useUiStore } from '../../store/uiStore';
-import { clampFontSize } from '../../lib/storage/storage';
 import { useResolvedTheme } from '../../hooks/useThemeSync';
 import { findPathAtOffset } from '../../lib/parser/tolerantParser';
 import { darkThemeData, DARK_THEME_NAME } from './darkTheme';
@@ -69,7 +68,6 @@ export function JsonEditor() {
   const jumpToOffset = useWorkspaceStore((s) => s.jumpToOffset);
   const clearJump = useWorkspaceStore((s) => s.clearJump);
   const editorSettings = useUiStore((s) => s.settings.editor);
-  const updateSettings = useUiStore((s) => s.updateSettings);
   const resolvedTheme = useResolvedTheme();
   const monacoThemeName = resolvedTheme === 'light' ? LIGHT_THEME_NAME : DARK_THEME_NAME;
   const [editorReady, setEditorReady] = useState(false);
@@ -145,67 +143,6 @@ export function JsonEditor() {
     decorationIds.current = editor.deltaDecorations(decorationIds.current, decorations);
   }, [ast, source, editorReady]);
 
-  // Ctrl/Cmd+wheel zoom — a custom, eased implementation rather than
-  // Monaco's own `mouseWheelZoom` option, which snaps the font size to each
-  // new value the instant a wheel event fires. That's a visible jump-cut on
-  // every notch of a physical mouse wheel; this instead nudges a target
-  // size per wheel tick and animates toward it over a few frames, so a
-  // scroll gesture reads as one continuous zoom rather than a staircase.
-  // Reads editorSettings.mouseWheelZoom fresh from the store on each event
-  // instead of depending on it, so toggling the setting doesn't need to
-  // re-attach the listener.
-  useEffect(() => {
-    const editor = editorRef.current;
-    const monaco = monacoRef.current;
-    if (!editorReady || !editor || !monaco) return;
-    const domNode = editor.getDomNode();
-    if (!domNode) return;
-
-    let target: number | null = null;
-    let raf: number | null = null;
-
-    const step = () => {
-      if (target === null) {
-        raf = null;
-        return;
-      }
-      const current = editor.getOption(monaco.editor.EditorOption.fontSize);
-      const eased = current + (target - current) * 0.35;
-      const settled = Math.abs(target - eased) < 0.05;
-      editor.updateOptions({ fontSize: settled ? target : eased });
-      if (settled) {
-        const settledSize = target;
-        target = null;
-        raf = null;
-        const state = useUiStore.getState();
-        if (state.settings.editor.fontSize !== settledSize) {
-          updateSettings({ editor: { ...state.settings.editor, fontSize: settledSize } });
-        }
-      } else {
-        raf = requestAnimationFrame(step);
-      }
-    };
-
-    const onWheel = (e: WheelEvent) => {
-      if (!(e.ctrlKey || e.metaKey)) return;
-      if (!useUiStore.getState().settings.editor.mouseWheelZoom) return;
-      e.preventDefault();
-      // One integer px per wheel notch regardless of that notch's raw delta
-      // magnitude (trackpads and wheel mice report wildly different deltaY
-      // sizes) — keeps every step the same small size, animated the same way.
-      const dir = e.deltaY < 0 ? 1 : -1;
-      const base = target ?? editor.getOption(monaco.editor.EditorOption.fontSize);
-      target = clampFontSize(base + dir);
-      if (raf === null) raf = requestAnimationFrame(step);
-    };
-
-    domNode.addEventListener('wheel', onWheel, { passive: false });
-    return () => {
-      domNode.removeEventListener('wheel', onWheel);
-      if (raf !== null) cancelAnimationFrame(raf);
-    };
-  }, [editorReady, updateSettings]);
-
   // jump to offset requests (from diagnostics panel / search)
   useEffect(() => {
     if (jumpToOffset === null) return;
@@ -254,10 +191,6 @@ export function JsonEditor() {
           minimap: { enabled: editorSettings.minimap },
           lineNumbers: editorSettings.lineNumbers ? 'on' : 'off',
           matchBrackets: editorSettings.bracketMatching ? 'always' : 'never',
-          // Monaco's own mouseWheelZoom is deliberately left off — Ctrl/Cmd
-          // +wheel zoom is implemented ourselves (see the effect below) with
-          // easing instead of an instant per-notch jump.
-          mouseWheelZoom: false,
           renderLineHighlight: 'line',
           scrollBeyondLastLine: false,
           smoothScrolling: true,

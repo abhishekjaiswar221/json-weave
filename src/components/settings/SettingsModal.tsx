@@ -4,7 +4,6 @@ import { ShieldCheck } from 'lucide-react';
 import { Modal } from '../common/Modal';
 import { useUiStore } from '../../store/uiStore';
 import { FONT_SIZE, clampFontSize, type AppTheme } from '../../lib/storage/storage';
-import { modKey } from '../../lib/platform';
 
 type Tab = 'editor' | 'formatting' | 'appearance' | 'privacy';
 const TABS: { id: Tab; label: string }[] = [
@@ -50,8 +49,8 @@ const selectClass = 'h-7 px-2 rounded-md border border-border-strong bg-surface-
  * "14" landing as "015"). This keeps its own draft string that's free to
  * hold whatever the user is literally typing, and only parses + clamps +
  * commits to the real setting on blur/Enter — the same pattern an
- * uncontrolled input would use, but still reflecting external changes
- * (Ctrl+wheel zoom) when the field isn't focused.
+ * uncontrolled input would use, but still reflecting external changes to
+ * the setting when the field isn't focused.
  */
 function FontSizeField({ value, onCommit }: { value: number; onCommit: (n: number) => void }) {
   const [draft, setDraft] = useState(String(value));
@@ -123,12 +122,6 @@ export function SettingsModal() {
                 <FontSizeField
                   value={settings.editor.fontSize}
                   onCommit={(n) => updateSettings({ editor: { ...settings.editor, fontSize: n } })}
-                />
-              </FieldRow>
-              <FieldRow label={`Zoom with ${modKey} + Scroll`}>
-                <Toggle
-                  checked={settings.editor.mouseWheelZoom}
-                  onChange={(v) => updateSettings({ editor: { ...settings.editor, mouseWheelZoom: v } })}
                 />
               </FieldRow>
               <FieldRow label="Tab size">
