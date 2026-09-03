@@ -36,7 +36,7 @@ export interface AppSettings {
 
 export const DEFAULT_SETTINGS: AppSettings = {
   editor: {
-    fontSize: 15,
+    fontSize: 14,
     tabSize: 2,
     wordWrap: true,
     minimap: false,
@@ -63,7 +63,7 @@ const KEYS = {
 export const SIDE_PANEL_WIDTH = { default: 380, min: 280, max: 640 };
 
 /** Bounds for the editor font size — the Settings field clamps to this range. */
-export const FONT_SIZE = { default: 15, min: 10, max: 32 };
+export const FONT_SIZE = { default: 14, min: 10, max: 32 };
 
 export function clampFontSize(px: number): number {
   return Math.min(FONT_SIZE.max, Math.max(FONT_SIZE.min, Math.round(px)));
