@@ -1,7 +1,9 @@
 import { Copy, Info } from 'lucide-react';
 import { useWorkspaceStore } from '../../store/workspaceStore';
 import { useUiStore } from '../../store/uiStore';
+import { useResolvedTheme } from '../../hooks/useThemeSync';
 import { formatPath, resolvePath } from '../../lib/json-path/path';
+import { typeColorHex } from '../../lib/typeColor';
 import type { JsonValue } from '../../lib/parser/types';
 import { SmartValuePreview } from './ValuePreview';
 import { Button } from '../common/Button';
@@ -11,18 +13,6 @@ function typeOf(v: JsonValue | undefined): string {
   if (v === null) return 'null';
   if (Array.isArray(v)) return 'array';
   return typeof v;
-}
-
-function typeColor(t: string): string {
-  switch (t) {
-    case 'string': return 'text-[#50FA7B]';
-    case 'number': return 'text-[#BD93F9]';
-    case 'boolean': return 'text-[#FFB86C]';
-    case 'null': return 'text-[#FF79C6]';
-    case 'object': return 'text-[#8BE9FD]';
-    case 'array': return 'text-[#8BE9FD]';
-    default: return 'text-text-faint';
-  }
 }
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
@@ -38,6 +28,7 @@ export function InspectorPanel() {
   const value = useWorkspaceStore((s) => s.value);
   const selectedPath = useWorkspaceStore((s) => s.selectedPath);
   const pushToast = useUiStore((s) => s.pushToast);
+  const resolvedTheme = useResolvedTheme();
 
   if (!selectedPath || value === undefined) {
     return (
@@ -78,7 +69,12 @@ export function InspectorPanel() {
       </div>
 
       <Row label="Type">
-        <span className={`mono text-[13px] font-medium ${typeColor(type)}`}>{type}</span>
+        <span
+          className="mono text-[13px] font-medium"
+          style={{ color: typeColorHex(type, resolvedTheme) ?? 'var(--color-text-faint)' }}
+        >
+          {type}
+        </span>
       </Row>
 
       {type === 'string' && (

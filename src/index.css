@@ -75,6 +75,13 @@
   --color-accent: #5fbe93;
   --color-accent-hover: #4aa378;
   --color-accent-muted: #5fbe931a;
+  /* Darker than the dark-mode values on purpose — those are pastel shades
+     tuned for a near-black background (e.g. success #4fd68c), which read as
+     washed-out, low-contrast text on white ("Valid JSON" and friends). */
+  --color-success: #15803d;
+  --color-warning: #b45309;
+  --color-danger: #dc2626;
+  --color-info: #0e7490;
 }
 
 @media (prefers-color-scheme: light) {
@@ -92,6 +99,10 @@
     --color-accent: #5fbe93;
     --color-accent-hover: #4aa378;
     --color-accent-muted: #5fbe931a;
+    --color-success: #15803d;
+    --color-warning: #b45309;
+    --color-danger: #dc2626;
+    --color-info: #0e7490;
   }
 }
 

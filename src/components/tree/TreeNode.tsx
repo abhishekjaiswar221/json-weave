@@ -4,6 +4,8 @@ import clsx from 'clsx';
 import type { JsonValue } from '../../lib/parser/types';
 import { appendIndex, appendKey, pathKey, type JsonPath } from '../../lib/json-path/path';
 import { useWorkspaceStore } from '../../store/workspaceStore';
+import { useResolvedTheme } from '../../hooks/useThemeSync';
+import { typeColorHex } from '../../lib/typeColor';
 
 const CHUNK = 150;
 
@@ -13,21 +15,21 @@ function typeOf(v: JsonValue): 'object' | 'array' | 'string' | 'number' | 'boole
   return typeof v as 'string' | 'number' | 'boolean' | 'object';
 }
 
-function inlinePreview(v: JsonValue): { text: string; className: string } {
+function inlinePreview(v: JsonValue, resolvedTheme: 'dark' | 'light'): { text: string; color?: string } {
   const t = typeOf(v);
   switch (t) {
     case 'string':
-      return { text: `"${v}"`, className: 'text-[#50FA7B]' };
+      return { text: `"${v}"`, color: typeColorHex('string', resolvedTheme) };
     case 'number':
-      return { text: String(v), className: 'text-[#BD93F9]' };
+      return { text: String(v), color: typeColorHex('number', resolvedTheme) };
     case 'boolean':
-      return { text: String(v), className: 'text-[#FFB86C]' };
+      return { text: String(v), color: typeColorHex('boolean', resolvedTheme) };
     case 'null':
-      return { text: 'null', className: 'text-[#FF79C6]' };
+      return { text: 'null', color: typeColorHex('null', resolvedTheme) };
     case 'array':
-      return { text: `Array(${(v as JsonValue[]).length})`, className: 'text-text-faint' };
+      return { text: `Array(${(v as JsonValue[]).length})` };
     case 'object':
-      return { text: `Object(${Object.keys(v as object).length})`, className: 'text-text-faint' };
+      return { text: `Object(${Object.keys(v as object).length})` };
   }
 }
 
@@ -46,6 +48,7 @@ export const TreeNode = memo(function TreeNode({ label, value, path, depth }: Tr
   const selectedKey = useWorkspaceStore((s) => (s.selectedPath ? pathKey(s.selectedPath) : ''));
   const selectPath = useWorkspaceStore((s) => s.selectPath);
   const [visibleCount, setVisibleCount] = useState(CHUNK);
+  const resolvedTheme = useResolvedTheme();
 
   const type = typeOf(value);
   const isBranch = type === 'object' || type === 'array';
@@ -60,7 +63,7 @@ export const TreeNode = memo(function TreeNode({ label, value, path, depth }: Tr
     return [];
   }, [type, value, path]);
 
-  const preview = !isBranch ? inlinePreview(value) : null;
+  const preview = !isBranch ? inlinePreview(value, resolvedTheme) : null;
 
   return (
     <div>
@@ -99,7 +102,12 @@ export const TreeNode = memo(function TreeNode({ label, value, path, depth }: Tr
             {type === 'array' ? `Array(${(value as JsonValue[]).length})` : `Object(${Object.keys(value as object).length})`}
           </span>
         ) : (
-          <span className={clsx('mono text-[12.5px] truncate', preview!.className)}>{preview!.text}</span>
+          <span
+            className={clsx('mono text-[12.5px] truncate', !preview!.color && 'text-text-faint')}
+            style={preview!.color ? { color: preview!.color } : undefined}
+          >
+            {preview!.text}
+          </span>
         )}
       </div>
 
