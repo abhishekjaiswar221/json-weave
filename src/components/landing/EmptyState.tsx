@@ -30,10 +30,18 @@ export function EmptyState() {
   };
 
   return (
+    // absolute + inset-3 rather than h-full + m-3 — a block box sized to
+    // 100% of its parent's height and *then* given margin ends up taller
+    // than the parent (margin isn't subtracted from height:100%), so the
+    // bottom few pixels — the dashed border's own bottom edge — overflowed
+    // past the parent and got painted over by the status bar underneath.
+    // inset-3 on an absolutely-positioned box (its parent is already
+    // `relative` — see Workspace.tsx) defines the edges directly, so it
+    // always fits exactly within bounds regardless of content height.
     <div
       {...handlers}
       className={clsx(
-        'h-full flex flex-col items-center justify-center gap-5 px-6 border-2 border-dashed rounded-lg m-3 transition-colors',
+        'absolute inset-3 overflow-auto flex flex-col items-center justify-center gap-5 px-6 border-2 border-dashed rounded-lg transition-colors',
         isDragging ? 'border-accent bg-accent-muted drop-active' : 'border-border'
       )}
     >

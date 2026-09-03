@@ -25,9 +25,10 @@ export function ExportMenu({ onClose }: { onClose: () => void }) {
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
-      {/* Fixed to the viewport's top-right rather than anchored to the trigger
-          button — see ImportMenu.tsx for why. */}
-      <div className="fixed top-14 right-3 sm:right-4 z-50 w-56 max-w-[calc(100vw-1.5rem)] rounded-lg border border-border bg-surface shadow-2xl py-1.5 animate-slide-up">
+      {/* Below md: fixed to the viewport's top-right rather than anchored to
+          the trigger — see ImportMenu.tsx for why. From md up it anchors
+          under the button like a normal dropdown. */}
+      <div className="fixed top-14 right-3 sm:right-4 md:absolute md:top-full md:right-0 md:mt-1.5 z-50 w-56 max-w-[calc(100vw-1.5rem)] md:max-w-none rounded-lg border border-border bg-surface shadow-2xl py-1.5 animate-slide-up">
         <Item
           icon={<Download size={13} />}
           label="Download JSON"

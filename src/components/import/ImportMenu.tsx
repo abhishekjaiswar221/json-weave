@@ -23,11 +23,12 @@ export function ImportMenu({ onClose }: { onClose: () => void }) {
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
-      {/* Fixed to the viewport's top-right rather than anchored to the trigger
-          button — anchoring to the trigger meant this could clip off the left
-          edge on narrow screens depending on exactly where "Open" landed in
-          the top bar. This way it's always fully on-screen. */}
-      <div className="fixed top-14 right-3 sm:right-4 z-50 w-56 max-w-[calc(100vw-1.5rem)] rounded-lg border border-border bg-surface shadow-2xl py-1.5 animate-slide-up">
+      {/* Below md: fixed to the viewport's top-right rather than anchored to
+          the trigger — anchoring there could clip off the left edge on
+          narrow screens depending on exactly where "Open" landed in the top
+          bar. From md up there's always room, so it anchors under the
+          button like a normal dropdown instead. */}
+      <div className="fixed top-14 right-3 sm:right-4 md:absolute md:top-full md:right-0 md:mt-1.5 z-50 w-56 max-w-[calc(100vw-1.5rem)] md:max-w-none rounded-lg border border-border bg-surface shadow-2xl py-1.5 animate-slide-up">
         <MenuItem icon={<Upload size={13} />} label="Upload file" onClick={() => { triggerOpenFile(); onClose(); }} />
         <MenuItem icon={<ClipboardPaste size={13} />} label="Paste JSON" onClick={pasteFromClipboard} />
         <MenuItem icon={<Link2 size={13} />} label="Open from URL" onClick={() => { openModal('openUrl'); onClose(); }} />
