@@ -41,6 +41,7 @@
   --animate-fade-in: fade-in 180ms ease-out;
   --animate-scale-in: scale-in 150ms ease-out;
   --animate-slide-up: slide-up 200ms ease-out;
+  --animate-slide-down: slide-down 200ms ease-out;
 }
 
 @keyframes fade-in {
@@ -50,6 +51,10 @@
 @keyframes scale-in {
   from { opacity: 0; transform: scale(0.97); }
   to { opacity: 1; transform: scale(1); }
+}
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 @keyframes slide-up {
   from { opacity: 0; transform: translateY(6px); }
