@@ -206,7 +206,12 @@ export function JsonEditor() {
           },
           quickSuggestions: false,
           folding: true,
-          renderWhitespace: 'selection',
+          // 'boundary' (leading/indentation whitespace only, not every space
+          // between words) rather than 'selection' — the tab-vs-space
+          // Indentation setting was otherwise invisible until you actively
+          // selected text, which reads as "doesn't seem to be doing
+          // anything" even though the underlying document is correct.
+          renderWhitespace: 'boundary',
           guides: { indentation: true, bracketPairs: false },
         }}
       />
