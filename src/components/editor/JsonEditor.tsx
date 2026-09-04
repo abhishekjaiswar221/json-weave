@@ -206,12 +206,14 @@ export function JsonEditor() {
           },
           quickSuggestions: false,
           folding: true,
-          // 'boundary' (leading/indentation whitespace only, not every space
-          // between words) rather than 'selection' — the tab-vs-space
-          // Indentation setting was otherwise invisible until you actively
-          // selected text, which reads as "doesn't seem to be doing
-          // anything" even though the underlying document is correct.
-          renderWhitespace: 'boundary',
+          // Reverted from 'boundary' back to 'selection': on a document with
+          // many short, deeply-nested lines (an array of small objects, say),
+          // a dot per leading space renders as dense columns of dots down
+          // the whole file — real clutter, not a helpful indicator. The
+          // underlying tab-vs-space Indentation setting was never actually
+          // broken (verified via clipboard content and real keystrokes); the
+          // visibility problem is better left alone than "solved" with this.
+          renderWhitespace: 'selection',
           guides: { indentation: true, bracketPairs: false },
         }}
       />
