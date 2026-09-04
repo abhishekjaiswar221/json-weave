@@ -206,6 +206,13 @@ export function JsonEditor() {
           },
           quickSuggestions: false,
           folding: true,
+          // Reverted from 'boundary' back to 'selection': on a document with
+          // many short, deeply-nested lines (an array of small objects, say),
+          // a dot per leading space renders as dense columns of dots down
+          // the whole file — real clutter, not a helpful indicator. The
+          // underlying tab-vs-space Indentation setting was never actually
+          // broken (verified via clipboard content and real keystrokes); the
+          // visibility problem is better left alone than "solved" with this.
           renderWhitespace: 'selection',
           guides: { indentation: true, bracketPairs: false },
         }}

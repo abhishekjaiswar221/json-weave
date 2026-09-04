@@ -28,9 +28,16 @@ export function Modal({ open, onClose, title, description, children, width = 'ma
   // Dialogs open from all over the app (toolbar, command palette, shortcuts)
   // without a natural first field to focus, so move focus to the dialog
   // itself — screen readers announce it immediately, and Tab from there
-  // enters the trapped cycle above.
+  // enters the trapped cycle above. But only when nothing *inside* the
+  // dialog has already claimed focus (e.g. OpenUrlModal's autoFocus
+  // input): that native autoFocus lands before this effect runs, and
+  // unconditionally re-focusing the dialog here was yanking focus away
+  // from it onto the non-editable dialog wrapper — any keystrokes typed
+  // right as the modal opened were landing on nothing.
   useEffect(() => {
-    if (open) dialogRef.current?.focus();
+    if (open && dialogRef.current && !dialogRef.current.contains(document.activeElement)) {
+      dialogRef.current.focus();
+    }
   }, [open]);
 
   if (!open) return null;

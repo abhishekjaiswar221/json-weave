@@ -18,16 +18,21 @@ export function ToastContainer() {
     <div
       role="status"
       aria-live="polite"
-      // Bottom-right — clear of the 32px status bar (and, below md, the
-      // mobile bottom-sheet's floating Tree/Inspector button at bottom-16,
-      // hence the taller offset there), never over the editor, the details
-      // column, the toolbar, or the command palette (all lower z-index).
-      className="fixed bottom-32 md:bottom-12 right-4 z-100 flex flex-col gap-2 w-80 max-w-[calc(100vw-2rem)]"
+      // Below md: top-center, dropping in like a native mobile banner —
+      // bottom-right is cramped on a phone and shares the corner with the
+      // floating Tree/Inspector button (bottom-16), and top banners are
+      // the dominant mobile notification convention anyway. From md up:
+      // bottom-right (clear of the 32px status bar), never over the
+      // editor, the details column, the toolbar, or the command palette
+      // (all lower z-index). Stack order is flipped between the two
+      // (flex-col-reverse vs flex-col) so the newest toast is always the
+      // one closest to wherever this is anchored, top or bottom.
+      className="fixed z-100 flex flex-col-reverse md:flex-col gap-2 top-34 left-1/2 -translate-x-1/2 w-[calc(100vw-2rem)] max-w-md md:top-auto md:left-auto md:translate-x-0 md:bottom-12 md:right-4 md:w-80 md:max-w-[calc(100vw-2rem)]"
     >
       {toasts.map((t) => (
         <div
           key={t.id}
-          className="flex items-start gap-2 rounded-md border border-border bg-surface-2 px-3 py-2.5 shadow-lg animate-slide-up"
+          className="flex items-start gap-2 rounded-md border border-border bg-surface-2 px-3 py-2.5 shadow-lg animate-slide-down md:animate-slide-up"
         >
           <span className="mt-0.5">{icons[t.kind]}</span>
           <span className="text-[12.5px] text-text flex-1 leading-snug">{t.message}</span>
